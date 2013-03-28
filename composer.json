@@ -13,9 +13,6 @@
         "url": "https://github.com/anyx/AnyxSecurityBundle.git",
         "reference": "master"
     },
-    "require": {
-        "anyx/social-bundle": "dev-master"
-    },
     "target-dir": "Anyx/SecurityBundle",
     "autoload": {
         "psr-0": { "Anyx\\SecurityBundle": "" }

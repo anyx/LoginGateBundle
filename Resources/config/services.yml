@@ -1,0 +1,8 @@
+services:
+    anyx.login_failure.storage.session:
+        class: Anyx\LoginGateBundle\Storage\SessionStorage
+    anyx.login_failure.storage.doctrine:
+        class: Anyx\LoginGateBundle\Storage\SessionStorage
+    anyx.login_failure.handler:
+        class: Anyx\LoginGateBundle\EventHandler\LoginFailureHandler
+        arguments: ['@anyx.login_failure.storage']

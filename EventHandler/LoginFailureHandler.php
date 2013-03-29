@@ -8,35 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\SecurityContext;
 
-
-use Anyx\LoginGateBundle\Storage\StorageInterface;
-
-class LoginFailureHandler implements AuthenticationFailureHandlerInterface
+class LoginFailureHandler extends AbstractHandler implements AuthenticationFailureHandlerInterface
 {
-    /**
-     *
-     * @var \Anyx\LoginGateBundle\Storage\StorageInterface
-     */
-    protected $storage;
-
-    /**
-     * 
-     * @param \Anyx\LoginGateBundle\Storage\StorageInterface $storage
-     */
-    public function __construct(StorageInterface $storage)
-    {
-        $this->storage = $storage;
-    }
-    
-    /**
-     * 
-     * @return \Anyx\LoginGateBundle\Storage\StorageInterface
-     */
-    public function getStorage()
-    {
-        return $this->storage;
-    }
-
     /**
      * 
      * @param \Symfony\Component\HttpFoundation\Request $request

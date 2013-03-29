@@ -3,39 +3,63 @@
 namespace Anyx\LoginGateBundle\Service;
 
 use Symfony\Component\HttpFoundation\Request;
+use Anyx\LoginGateBundle\Storage\StorageInterface;
 
 /**
  * 
  */
 class BruteForceChecker
 {
-    const COUNT_LOGIN_ERRORS = '_security.count_errors';
-    
     /**
      *
-     * @var \SevenDays\BigBroBundle\Service\Logger
+     * @var \Anyx\LoginGateBundle\Storage\StorageInterface
      */
-    private $logger;
+    protected $storage;
     
     /**
      * @var array
      */
     private $options = array(
-        'count_allow_login_attempts' => 3
+        'max_count_attempts'    => 3,
+        'timeout'               => 60
     );
 
     /**
      * 
-     * @param \SevenDays\BigBroBundle\Service\Logger $logger
+     * @return \Anyx\LoginGateBundle\Storage\StorageInterface
      */
-    public function __construct(Logger $logger, array $options)
+    public function getStorage()
     {
-        $this->logger = $logger;
+        return $this->storage;
+    }
+
+    /**
+     * 
+     * @param \Anyx\LoginGateBundle\Storage\StorageInterface $storage
+     * @param array $options
+     */
+    public function __construct(StorageInterface $storage, array $options)
+    {
+        $this->storage = $storage;
         $this->options = $options;
     }
 
-    public function check(Request $request)
+    /**
+     * 
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return boolean
+     */
+    public function canLogin(Request $request)
     {
-        $session = $request->getSession();
+        if ($this->getStorage()->getCountAttempts($request) > $this->options['max_count_attempts']) {
+
+            $lastAttemptDate = $this->getStorage()->getLastAttemptDate($request);
+            $dateAllowLogin = $lastAttemptDate->modify('+' . $this->options['timeout'] . ' second');
+
+            if ($dateAllowLogin->diff(new \DateTime())->invert === 1) {
+                return false;
+            }
+        }
+        return true;
     }
 }

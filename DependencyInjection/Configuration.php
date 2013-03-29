@@ -22,8 +22,12 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('max_count_attempts')->defaultValue(3)->end()
-                ->scalarNode('timeout')->defaultValue(3000)->end()
+                ->arrayNode('options')
+                    ->children()
+                        ->scalarNode('max_count_attempts')->defaultValue(3)->end()
+                        ->scalarNode('timeout')->defaultValue(3000)->end()
+                    ->end()
+                ->end()
                 ->scalarNode('storage_type')
                     ->validate()
                     ->ifNotInArray(array('session', 'orm'))

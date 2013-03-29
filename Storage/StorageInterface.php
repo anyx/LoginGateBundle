@@ -9,6 +9,7 @@ interface StorageInterface
     /**
      * 
      * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return integer
      */
     public function getCountAttempts(Request $request);
     
@@ -23,4 +24,10 @@ interface StorageInterface
      * @param \Symfony\Component\HttpFoundation\Request $request
      */
     public function clearCountAttempts(Request $request);
+
+    /**
+     * 
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     */
+    public function getLastAttemptDate(Request $request);
 }

@@ -114,7 +114,8 @@ class OrmStorage implements StorageInterface
         $entity->setIp($request->getClientIp());
 
         $data = array(
-            'exception' => $exception->getMessage()
+            'exception' => $exception->getMessage(),
+            'clientIp'  => $request->getClientIp()
         );
         
         $userInforamtion = $exception->getExtraInformation();

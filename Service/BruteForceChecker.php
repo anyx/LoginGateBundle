@@ -51,7 +51,7 @@ class BruteForceChecker
      */
     public function canLogin(Request $request)
     {
-        if ($this->getStorage()->getCountAttempts($request) > $this->options['max_count_attempts']) {
+        if ($this->getStorage()->getCountAttempts($request) >= $this->options['max_count_attempts']) {
 
             $lastAttemptDate = $this->getStorage()->getLastAttemptDate($request);
             $dateAllowLogin = $lastAttemptDate->modify('+' . $this->options['timeout'] . ' second');

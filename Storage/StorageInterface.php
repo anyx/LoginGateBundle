@@ -3,6 +3,8 @@
 namespace Anyx\LoginGateBundle\Storage;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+
 
 interface StorageInterface
 {
@@ -12,12 +14,13 @@ interface StorageInterface
      * @return integer
      */
     public function getCountAttempts(Request $request);
-    
+
     /**
      * 
      * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\Security\Core\Exception\AuthenticationException $exception
      */
-    public function incrementCountAttempts(Request $request);
+    public function incrementCountAttempts(Request $request, AuthenticationException $exception);
     
     /**
      * 

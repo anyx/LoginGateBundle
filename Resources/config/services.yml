@@ -1,10 +1,15 @@
 parameters:
     anyx.authentication.listener.form.class: Anyx\LoginGateBundle\Security\UsernamePasswordFormAuthenticationListener
+    anyx.login_failure.orm.entity_class: Anyx\LoginGateBundle\Entity\FailureLoginAttempt
 services:
     anyx.login_failure.storage.session:
         class: Anyx\LoginGateBundle\Storage\SessionStorage
-    anyx.login_failure.storage.doctrine:
-        class: Anyx\LoginGateBundle\Storage\SessionStorage
+    anyx.login_failure.storage.orm:
+        class: Anyx\LoginGateBundle\Storage\OrmStorage
+        arguments: ['@doctrine.orm.entity_manager', '%anyx.login_failure.orm.entity_class%', '%anyx.login_failure.watch_period%']
+    anyx.login_failure.storage.composite:
+        class: Anyx\LoginGateBundle\Storage\CompositeStorage
+        arguments: [['@anyx.login_failure.storage.session', '@anyx.login_failure.storage.orm']]
     anyx.login_failure.brute_force_checker:
         class: Anyx\LoginGateBundle\Service\BruteForceChecker
         arguments: ['@anyx.login_failure.storage', '%anyx.login_failure.brute_force_checker_options%']

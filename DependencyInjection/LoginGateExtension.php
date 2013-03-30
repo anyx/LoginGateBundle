@@ -27,5 +27,6 @@ class LoginGateExtension extends Extension
         
         $container->setAlias('anyx.login_failure.storage', 'anyx.login_failure.storage.' . $config['storage_type']);
         $container->setParameter('anyx.login_failure.brute_force_checker_options', $config['options']);
+        $container->setParameter('anyx.login_failure.watch_period', $config['options']['watch_period']);
     }
 }

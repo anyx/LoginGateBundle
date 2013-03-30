@@ -22,15 +22,17 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('watch_period')->defaultValue(10000)->end()
                 ->arrayNode('options')
                     ->children()
                         ->scalarNode('max_count_attempts')->defaultValue(3)->end()
                         ->scalarNode('timeout')->defaultValue(3000)->end()
+                        ->scalarNode('watch_period')->defaultValue(6000)->end()
                     ->end()
                 ->end()
                 ->scalarNode('storage_type')
                     ->validate()
-                    ->ifNotInArray(array('session', 'orm'))
+                    ->ifNotInArray(array('session', 'orm', 'composite'))
                     ->thenInvalid("Invalid storage type '%s'. Available types: 'session', 'orm'")
         ;                
         

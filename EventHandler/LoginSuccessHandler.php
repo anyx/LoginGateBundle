@@ -4,6 +4,7 @@ namespace Anyx\LoginGateBundle\EventHandler;
 
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class LoginSuccessHandler extends AbstractHandler implements AuthenticationSuccessHandlerInterface
@@ -16,5 +17,6 @@ class LoginSuccessHandler extends AbstractHandler implements AuthenticationSucce
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
         $this->getStorage()->clearCountAttempts($request);
+        return new RedirectResponse($request->headers->get('referer'));
     }
 }

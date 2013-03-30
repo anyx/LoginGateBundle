@@ -3,6 +3,7 @@
 namespace Anyx\LoginGateBundle\Storage;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class SessionStorage implements StorageInterface
 {
@@ -33,8 +34,9 @@ class SessionStorage implements StorageInterface
     /**
      * 
      * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\Security\Core\Exception\AuthenticationException $exception
      */
-    public function incrementCountAttempts(Request $request)
+    public function incrementCountAttempts(Request $request, AuthenticationException $exception)
     {
         $request->getSession()->set(self::COUNT_LOGIN_ATTEMPTS, $this->getCountAttempts($request) + 1);
         $request->getSession()->set(self::DATE_LAST_LOGIN_ATTEMPT, new \DateTime());

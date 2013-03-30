@@ -18,7 +18,7 @@ class LoginFailureHandler extends AbstractHandler implements AuthenticationFailu
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        $this->getStorage()->incrementCountAttempts($request);
+        $this->getStorage()->incrementCountAttempts($request, $exception);
         
         $referer = $request->headers->get('referer');
         $request->getSession()->set(SecurityContext::AUTHENTICATION_ERROR, $exception);

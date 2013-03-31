@@ -81,7 +81,7 @@ class CompositeStorage implements StorageInterface
         $date = false;
         foreach ($this->getStorages() as $storage) {
             $storageDate = $storage->getLastAttemptDate($request);
-            if (empty($date) || $storageDate->diff($date)->invert == 1) {
+            if (!empty($storageDate) && (empty($date) || $storageDate->diff($date)->invert == 1)) {
                 $date = $storageDate;
             }
         }

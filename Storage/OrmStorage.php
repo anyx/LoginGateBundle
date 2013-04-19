@@ -115,7 +115,8 @@ class OrmStorage implements StorageInterface
 
         $data = array(
             'exception' => $exception->getMessage(),
-            'clientIp'  => $request->getClientIp()
+            'clientIp'  => $request->getClientIp(),
+            'sessionId' => $request->getSession()->getId()
         );
         
         $userInforamtion = $exception->getExtraInformation();

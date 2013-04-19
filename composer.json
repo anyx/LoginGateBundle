@@ -1,7 +1,10 @@
 {
     "name": "anyx/login-gate-bundle",
     "description": "Checking brute force attacks on site",
-    "type": "symfony-bundle",                
+    "keywords": ["security", "brute-force"],
+    "homepage": "https://github.com/anyx/LoginGateBundle",
+    "type": "symfony-bundle",
+    "license": "MIT",
     "authors": [
         {
             "name": "Aleksandr Klimenkov",
@@ -12,6 +15,9 @@
         "type": "git",
         "url": "https://github.com/anyx/LoginGateBundle.git",
         "reference": "master"
+    },
+    "require": {
+        "symfony/framework-bundle": "2.*"
     },
     "target-dir": "Anyx/LoginGateBundle",
     "autoload": {

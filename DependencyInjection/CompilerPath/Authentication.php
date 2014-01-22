@@ -18,13 +18,13 @@ class Authentication implements CompilerPassInterface
                     ->addMethodCall(
                             'setBruteForceChecker',
                             array(
-                                $container->getDefinition('anyx.login_failure.brute_force_checker')
+                                $container->findDefinition('anyx.login_failure.brute_force_checker')
                             )
                     )
                     ->addMethodCall(
                             'setDispatcher',
                             array(
-                                $container->getDefinition('event_dispatcher')
+                                $container->findDefinition('event_dispatcher')
                             )
                     )
                 

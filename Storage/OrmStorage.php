@@ -119,11 +119,11 @@ class OrmStorage implements StorageInterface
             'sessionId' => $request->getSession()->getId()
         );
         
-        $userInforamtion = $exception->getExtraInformation();
-        if (!empty($userInforamtion)) {
-            $data['user'] = $userInforamtion->getUser();
+        $username = $request->get('_username');
+        if (!empty($username)) {
+            $data['user'] = $username;
         }
-        
+
         $entity->setData($data);
         
         $em = $this->getEntityManager();

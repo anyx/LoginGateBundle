@@ -11,16 +11,10 @@
             "email": "alx.devel@gmail.com"
         }
     ],
-    "source": {
-        "type": "git",
-        "url": "https://github.com/anyx/LoginGateBundle.git",
-        "reference": "master"
-    },
     "require": {
         "symfony/framework-bundle": "2.*"
     },
-    "target-dir": "Anyx/LoginGateBundle",
     "autoload": {
-        "psr-0": { "Anyx\\LoginGateBundle": "" }
+        "psr-4": { "Anyx\\LoginGateBundle\\": "" }
     }
 }

@@ -4,6 +4,7 @@ namespace Anyx\LoginGateBundle\DependencyInjection\CompilerPath;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 class Authentication implements CompilerPassInterface
 {
@@ -18,13 +19,13 @@ class Authentication implements CompilerPassInterface
                     ->addMethodCall(
                             'setBruteForceChecker',
                             array(
-                                $container->findDefinition('anyx.login_failure.brute_force_checker')
+                                new Reference('anyx.login_failure.brute_force_checker')
                             )
                     )
                     ->addMethodCall(
                             'setDispatcher',
                             array(
-                                $container->findDefinition('event_dispatcher')
+                                new Reference('event_dispatcher')
                             )
                     )
                 

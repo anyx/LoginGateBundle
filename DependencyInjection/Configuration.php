@@ -30,11 +30,14 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('watch_period')->defaultValue(6000)->end()
                     ->end()
                 ->end()
-                ->scalarNode('storage_type')
+                ->arrayNode('storages')
+                    ->requiresAtLeastOneElement()
+                    ->prototype('scalar')
                     ->validate()
-                    ->ifNotInArray(array('session', 'orm', 'composite'))
-                    ->thenInvalid("Invalid storage type '%s'. Available types: 'session', 'orm'")
-        ;                
+                    ->ifNotInArray(['session', 'orm', 'mongodb'])
+                    ->thenInvalid("Invalid storage type '%s'. Available types: 'session', 'orm', 'mongodb'")
+                ->end()
+        ;
         
         return $treeBuilder;
     }

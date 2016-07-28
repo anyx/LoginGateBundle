@@ -5,18 +5,14 @@ namespace Anyx\LoginGateBundle\Storage;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
-/**
- * 
- */
 class CompositeStorage implements StorageInterface
 {
     /**
      * @var array
      */
-    protected $storages = array();
+    protected $storages = [];
 
     /**
-     * 
      * @param array $storages
      */
     public function __construct(array $storages)
@@ -27,7 +23,6 @@ class CompositeStorage implements StorageInterface
     }
 
     /**
-     * 
      * @return array
      */
     public function getStorages()
@@ -35,9 +30,7 @@ class CompositeStorage implements StorageInterface
         return $this->storages;
     }
 
-    
     /**
-     * 
      * @param \Anyx\LoginGateBundle\Storage\StorageInterface $storage
      */
     public function addStorage(StorageInterface $storage)
@@ -46,7 +39,6 @@ class CompositeStorage implements StorageInterface
     }
 
     /**
-     * 
      * @param \Symfony\Component\HttpFoundation\Request $request
      */
     public function clearCountAttempts(Request $request)
@@ -57,7 +49,6 @@ class CompositeStorage implements StorageInterface
     }
 
     /**
-     * 
      * @param \Symfony\Component\HttpFoundation\Request $request
      */
     public function getCountAttempts(Request $request)
@@ -67,12 +58,11 @@ class CompositeStorage implements StorageInterface
         foreach ($this->getStorages() as $storage) {
             $countAttempts[] = $storage->getCountAttempts($request);
         }
-        
+
         return (int) max($countAttempts);
     }
 
     /**
-     * 
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \DateTime | false
      */
@@ -89,7 +79,6 @@ class CompositeStorage implements StorageInterface
     }
 
     /**
-     * 
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Symfony\Component\Security\Core\Exception\AuthenticationException $exception
      */

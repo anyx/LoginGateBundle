@@ -1,0 +1,14 @@
+Anyx\LoginGateBundle\Document\FailureLoginAttempt:
+    type: document
+    repositoryClass: Anyx\LoginGateBundle\Document\FailureLoginAttemptRepository
+    fields:
+        id:
+            type: id
+            id: true
+        ip:
+            type: integer
+            index: true
+        createdAt:
+            type: date
+        data:
+            type: hash

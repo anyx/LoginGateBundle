@@ -1,32 +1,22 @@
 LoginGateBundle
 ==============
 
+[![Build Status](https://travis-ci.org/anyx/LoginGateBundle.svg?branch=master)](https://travis-ci.org/anyx/LoginGateBundle)
+
 This bundle detect attempts brute-force attacks on Symfony applications. Bundle disable login for attackers on certain period.
 Also bundle provides special event for execute custom handlers under brute-force attack.
 
 Configuration example:
 
-app/config/security.yml:
-
-```yml
-security:
-    firewalls:
-        #your config
-        site:
-            form_login:
-                failure_handler: anyx.login_failure.handler
-                success_handler: anyx.login_success.handler
-```
-
 app/config/config.yml:
 
 ```yml
 login_gate:
-    storage_type: composite # Attempts storage. Available 'orm' and 'session' storage. 'composite' includes both storages.
+    storages: ['orm'] # Attempts storages. Available storages: ['orm', 'session', 'mongodb']
     options:
-        max_count_attempts: 4 
+        max_count_attempts: 3
         timeout: 600 #Ban period
-        watch_period: 3600 #Only for orm storage. Period of actuality attempts
+        watch_period: 3600 #Only for databases storage. Period of actuality attempts
 
 #register event handler
 services:

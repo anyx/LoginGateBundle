@@ -1,0 +1,7 @@
+parameters:
+    anyx.login_gate.orm.entity_class: Anyx\LoginGateBundle\Entity\FailureLoginAttempt
+services:
+    anyx.login_gate.storage.orm:
+        class: Anyx\LoginGateBundle\Storage\DatabaseStorage
+        arguments: ['@doctrine.orm.entity_manager', '%anyx.login_gate.orm.entity_class%', '%anyx.login_gate.watch_period%']
+

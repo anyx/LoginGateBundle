@@ -12,9 +12,22 @@
         }
     ],
     "require": {
-        "symfony/framework-bundle": "2.*"
+        "symfony/symfony": "~2.8|~3.0"
+    },
+    "require-dev": {
+        "symfony/monolog-bundle": "^2.11",
+        "phpunit/phpunit": "^5.4",
+        "phpspec/phpspec": "^2.5",
+        "doctrine/doctrine-bundle": "^1.6.3",
+        "doctrine/orm": "^2.5.4",
+        "doctrine/doctrine-fixtures-bundle": "^2.3",
+        "doctrine/mongodb-odm": "~1.0",
+        "doctrine/mongodb-odm-bundle": "~3.0"
     },
     "autoload": {
         "psr-4": { "Anyx\\LoginGateBundle\\": "" }
+    },
+    "config": {
+        "bin-dir": "bin"
     }
 }

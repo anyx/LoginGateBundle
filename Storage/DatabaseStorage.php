@@ -2,22 +2,17 @@
 
 namespace Anyx\LoginGateBundle\Storage;
 
-use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManager;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Anyx\LoginGateBundle\Exception\BruteForceAttemptException;
+use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
-class OrmStorage implements StorageInterface
+class DatabaseStorage implements StorageInterface
 {
-    /**
-     * @var \Anyx\LoginGateBundle\Entity\FailureLoginAttemptRepository
-     */
-    private $entityManager;
-    
     /**
      * @var string
      */
-    private $entityClass;
+    private $modelClassName;
 
     /**
      * @var integer
@@ -25,78 +20,76 @@ class OrmStorage implements StorageInterface
     private $watchPeriod = 200;
 
     /**
-     * 
-     * @param \Doctrine\ORM\EntityManager $entityManager
+     * @var \Doctrine\Common\Persistence\ObjectManager
+     */
+    private $objectManager;
+
+    /**
+     * @return \Doctrine\Common\Persistence\ObjectManager
+     */
+    public function getObjectManager()
+    {
+        return $this->objectManager;
+    }
+
+    /**
+     * @param \Doctrine\Common\Persistence\ObjectManager $objectManager
      * @param string $entityClass
      * @param integer $watchPeriod
      */
-    public function __construct(EntityManager $entityManager, $entityClass, $watchPeriod)
+    public function __construct(ObjectManager $objectManager, $entityClass, $watchPeriod)
     {
-        $this->entityManager = $entityManager;
-        $this->entityClass = $entityClass;
+        $this->objectManager = $objectManager;
+        $this->modelClassName = $entityClass;
         $this->watchPeriod = $watchPeriod;
     }
 
     /**
-     * 
-     * @return \Doctrine\ORM\EntityManager
-     */
-    public function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-
-    /**
-     * 
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return integer
      */
     public function clearCountAttempts(Request $request)
     {
         if (!$this->hasIp($request)) {
             return;
         }
-        
+
         $this->getRepository()->clearAttempts($request->getClientIp());
     }
 
     /**
-     * 
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return integer
      */
     public function getCountAttempts(Request $request)
     {
         if (!$this->hasIp($request)) {
-            return;
+            return 0;
         }
         $startWatchDate = new \DateTime();
         $startWatchDate->modify('-' . $this->getWatchPeriod(). ' second');
-        
+
         return $this->getRepository()->getCountAttempts($request->getClientIp(), $startWatchDate);
     }
 
     /**
-     * 
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \DateTime|false
      */
     public function getLastAttemptDate(Request $request)
     {
         if (!$this->hasIp($request)) {
-            return;
+            return false;
         }
-        
+
         $lastAttempt = $this->getRepository()->getLastAttempt($request->getClientIp());
         if (!empty($lastAttempt)) {
             return $lastAttempt->getCreatedAt();
         }
-        
+
         return false;
     }
 
     /**
-     * 
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Symfony\Component\Security\Core\Exception\AuthenticationException $exception
      */
@@ -105,35 +98,34 @@ class OrmStorage implements StorageInterface
         if ($exception instanceof BruteForceAttemptException) {
             return;
         }
-        
+
         if (!$this->hasIp($request)) {
             return;
         }
-        $entity = $this->createEntity();
-        
-        $entity->setIp($request->getClientIp());
+        $model = $this->createModel();
 
-        $data = array(
+        $model->setIp($request->getClientIp());
+
+        $data = [
             'exception' => $exception->getMessage(),
             'clientIp'  => $request->getClientIp(),
             'sessionId' => $request->getSession()->getId()
-        );
-        
+        ];
+
         $username = $request->get('_username');
         if (!empty($username)) {
             $data['user'] = $username;
         }
 
-        $entity->setData($data);
-        
-        $em = $this->getEntityManager();
-        
-        $em->persist($entity);
-        $em->flush($entity);
+        $model->setData($data);
+
+        $objectManager = $this->getObjectManager();
+
+        $objectManager->persist($model);
+        $objectManager->flush($model);
     }
 
     /**
-     * 
      * @return integer
      */
     protected function getWatchPeriod()
@@ -142,24 +134,22 @@ class OrmStorage implements StorageInterface
     }
 
     /**
-     * 
+     * @return string
      */
-    protected function createEntity()
+    protected function createModel()
     {
-        return new $this->entityClass;
+        return new $this->modelClassName;
     }
 
     /**
-     * 
-     * @return \Anyx\LoginGateBundle\Entity\FailureLoginAttemptRepository
+     * @return \Anyx\LoginGateBundle\Model\FailureLoginAttemptRepositoryInterface
      */
     protected function getRepository()
     {
-        return $this->getEntityManager()->getRepository($this->entityClass);
+        return $this->getObjectManager()->getRepository($this->modelClassName);
     }
 
     /**
-     * 
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return boolean
      */

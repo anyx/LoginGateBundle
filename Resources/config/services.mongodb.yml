@@ -1,0 +1,7 @@
+parameters:
+    anyx.login_gate.mongodb.document_class: Anyx\LoginGateBundle\Document\FailureLoginAttempt
+services:
+    anyx.login_gate.storage.mongodb:
+        class: Anyx\LoginGateBundle\Storage\DatabaseStorage
+        arguments: ['@doctrine_mongodb.odm.document_manager', '%anyx.login_gate.mongodb.document_class%', '%anyx.login_gate.watch_period%']
+

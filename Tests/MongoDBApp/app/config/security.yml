@@ -1,0 +1,19 @@
+security:
+    encoders:
+        MongoDBAppBundle\Document\User:
+            algorithm: bcrypt
+
+    providers:
+        user:
+            id: app.service.user_provider
+
+    firewalls:
+        main:
+            anonymous: ~
+            provider: user
+            form_login:
+                login_path: login
+                check_path: login
+
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }

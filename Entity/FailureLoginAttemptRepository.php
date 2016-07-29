@@ -2,15 +2,12 @@
 
 namespace Anyx\LoginGateBundle\Entity;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityRepository as Repository;
+use Anyx\LoginGateBundle\Model\FailureLoginAttemptRepositoryInterface;
 
-/**
- * 
- */
-class FailureLoginAttemptRepository extends EntityRepository
+class FailureLoginAttemptRepository extends Repository implements FailureLoginAttemptRepositoryInterface
 {
     /**
-     * 
      * @param string $ip
      * @param \DateTime $startDate
      * @return integer
@@ -30,8 +27,7 @@ class FailureLoginAttemptRepository extends EntityRepository
                         'createdAt' => $startDate
                     ))
                     ->getQuery()
-                    ->getSingleScalarResult()
-        ;
+                    ->getSingleScalarResult();
     }
     
     /**
@@ -57,7 +53,6 @@ class FailureLoginAttemptRepository extends EntityRepository
     }
     
     /**
-     * 
      * @param integer $ip
      * @return integer
      */

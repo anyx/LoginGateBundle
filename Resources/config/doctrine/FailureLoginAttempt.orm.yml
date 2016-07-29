@@ -1,0 +1,18 @@
+Anyx\LoginGateBundle\Entity\FailureLoginAttempt:
+    type: entity
+    table: failure_login_attempt
+    repositoryClass: Anyx\LoginGateBundle\Entity\FailureLoginAttemptRepository
+    indexes:
+        ip:
+            columns: [ ip ]
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        ip:
+            type: integer
+        createdAt:
+            type: datetime
+        data:
+            type: array

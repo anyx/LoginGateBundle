@@ -5,13 +5,9 @@ namespace Anyx\LoginGateBundle\Service;
 use Symfony\Component\HttpFoundation\Request;
 use Anyx\LoginGateBundle\Storage\StorageInterface;
 
-/**
- * 
- */
 class BruteForceChecker
 {
     /**
-     *
      * @var \Anyx\LoginGateBundle\Storage\StorageInterface
      */
     protected $storage;
@@ -19,13 +15,12 @@ class BruteForceChecker
     /**
      * @var array
      */
-    private $options = array(
+    private $options = [
         'max_count_attempts'    => 3,
         'timeout'               => 60
-    );
+    ];
 
     /**
-     * 
      * @return \Anyx\LoginGateBundle\Storage\StorageInterface
      */
     public function getStorage()
@@ -34,7 +29,6 @@ class BruteForceChecker
     }
 
     /**
-     * 
      * @param \Anyx\LoginGateBundle\Storage\StorageInterface $storage
      * @param array $options
      */
@@ -45,7 +39,6 @@ class BruteForceChecker
     }
 
     /**
-     * 
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return boolean
      */
@@ -60,6 +53,7 @@ class BruteForceChecker
                 return false;
             }
         }
+
         return true;
     }
 }

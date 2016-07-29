@@ -24,9 +24,20 @@ class LoginGateExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-        
-        $container->setAlias('anyx.login_failure.storage', 'anyx.login_failure.storage.' . $config['storage_type']);
-        $container->setParameter('anyx.login_failure.brute_force_checker_options', $config['options']);
-        $container->setParameter('anyx.login_failure.watch_period', $config['options']['watch_period']);
+
+        foreach (['orm', 'mongodb'] as $storage) {
+            if (in_array($storage, $config['storages'])) {
+                $loader->load('services.' . $storage . '.yml');
+            }
+        }
+
+        $chosenStorages = [];
+        foreach ($config['storages'] as $storage) {
+            $chosenStorages[] = 'anyx.login_gate.storage.' . $storage;
+        }
+
+        $container->setParameter('anyx.login_gate.storages', $chosenStorages);
+        $container->setParameter('anyx.login_gate.brute_force_checker_options', $config['options']);
+        $container->setParameter('anyx.login_gate.watch_period', $config['options']['watch_period']);
     }
 }

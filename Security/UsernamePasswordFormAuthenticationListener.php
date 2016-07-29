@@ -11,7 +11,6 @@ use Anyx\LoginGateBundle\Security\Events as SecurityEvents;
 use Anyx\LoginGateBundle\Event\BruteForceAttemptEvent;
 use Anyx\LoginGateBundle\Exception\BruteForceAttemptException;
 
-
 class UsernamePasswordFormAuthenticationListener extends BaseListener
 {
     /**
@@ -25,7 +24,6 @@ class UsernamePasswordFormAuthenticationListener extends BaseListener
     protected $dispatcher;
 
     /**
-     * 
      * @return \Anyx\LoginGateBundle\Service\BruteForceChecker
      */
     public function getBruteForceChecker()
@@ -34,7 +32,6 @@ class UsernamePasswordFormAuthenticationListener extends BaseListener
     }
 
     /**
-     * 
      * @param \Anyx\LoginGateBundle\Service\BruteForceChecker $bruteForceChecker
      */
     public function setBruteForceChecker(BruteForceChecker $bruteForceChecker)
@@ -43,8 +40,7 @@ class UsernamePasswordFormAuthenticationListener extends BaseListener
     }
 
     /**
-     * 
-     * @return \Anyx\LoginGateBundle\Service\BruteForceChecker
+     * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
      */
     public function getDispatcher()
     {
@@ -52,7 +48,6 @@ class UsernamePasswordFormAuthenticationListener extends BaseListener
     }
 
     /**
-     * 
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
      */
     public function setDispatcher(EventDispatcherInterface $dispatcher)
@@ -60,11 +55,8 @@ class UsernamePasswordFormAuthenticationListener extends BaseListener
         $this->dispatcher = $dispatcher;
     }
 
-        
     /**
-     * 
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return type
      */
     protected function attemptAuthentication(Request $request)
     {
@@ -73,7 +65,7 @@ class UsernamePasswordFormAuthenticationListener extends BaseListener
             $event = new BruteForceAttemptEvent($request, $this->getBruteForceChecker());
             
             $this->getDispatcher()->dispatch(SecurityEvents::BRUTE_FORCE_ATTEMPT, $event);
-            
+
             throw new BruteForceAttemptException('Brute force attempt');
         }
         

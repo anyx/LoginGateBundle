@@ -1,0 +1,21 @@
+security:
+    encoders:
+        MysqlAppBundle\Entity\User:
+            algorithm: bcrypt
+
+    providers:
+        user_provider:
+            entity:
+                class: MysqlAppBundle:User
+                property: email
+
+    firewalls:
+        main:
+            anonymous: ~
+            provider: user_provider
+            form_login:
+                login_path: login
+                check_path: login
+
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }

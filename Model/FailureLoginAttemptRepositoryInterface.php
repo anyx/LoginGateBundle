@@ -12,13 +12,13 @@ interface FailureLoginAttemptRepositoryInterface
     public function getCountAttempts($ip, \DateTime $startDate);
 
     /**
-     * @param integer $ip
+     * @param string $ip
      * @return \Anyx\LoginGateBundle\Model\FailureLoginAttempt | null
      */
     public function getLastAttempt($ip);
 
     /**
-     * @param integer $ip
+     * @param string $ip
      * @return integer
      */
     public function clearAttempts($ip);

@@ -11,7 +11,8 @@ Anyx\LoginGateBundle\Entity\FailureLoginAttempt:
             generator: { strategy: AUTO }
     fields:
         ip:
-            type: integer
+            type: string
+            length: 45 #compatibility with ipv6
         createdAt:
             type: datetime
         data:

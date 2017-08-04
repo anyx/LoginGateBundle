@@ -10,7 +10,7 @@ abstract class FailureLoginAttempt
     protected $id;
 
     /**
-     * @var int
+     * @var string
      */
     protected $ip;
 
@@ -36,15 +36,11 @@ abstract class FailureLoginAttempt
 
     public function getIp()
     {
-        return long2ip($this->ip);
+        return $this->ip;
     }
 
     public function setIp($ip)
     {
-        if (!is_int($ip)) {
-            $ip = ip2long($ip);
-        }
-
         $this->ip = $ip;
     }
 

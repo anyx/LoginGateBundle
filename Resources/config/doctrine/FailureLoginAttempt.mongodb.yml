@@ -6,7 +6,7 @@ Anyx\LoginGateBundle\Document\FailureLoginAttempt:
             type: id
             id: true
         ip:
-            type: integer
+            type: string
             index: true
         createdAt:
             type: date

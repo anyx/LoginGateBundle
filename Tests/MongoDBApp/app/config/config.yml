@@ -49,3 +49,7 @@ services:
     app.service.user_provider:
         class: MongoDBAppBundle\Service\UserProvider
         arguments: ['@doctrine_mongodb.odm.document_manager', 'MongoDBAppBundle\Document\User']
+    app.brute_force_listener:
+        class: MongoDBAppBundle\EventListener\BruteForceAttemptListener
+        tags:
+            - { name: kernel.event_listener, event: security.brute_force_attempt, method: onBruteForceAttempt }

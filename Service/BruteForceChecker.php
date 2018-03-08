@@ -11,13 +11,13 @@ class BruteForceChecker
      * @var \Anyx\LoginGateBundle\Storage\StorageInterface
      */
     protected $storage;
-    
+
     /**
      * @var array
      */
     private $options = [
-        'max_count_attempts'    => 3,
-        'timeout'               => 60
+        'max_count_attempts' => 3,
+        'timeout' => 60
     ];
 
     /**

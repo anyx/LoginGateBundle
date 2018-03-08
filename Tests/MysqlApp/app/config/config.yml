@@ -38,3 +38,8 @@ login_gate:
         timeout: 600 #Ban period
         watch_period: 3600 #Only for databases storage. Period of actuality attempts
 
+services:
+    app.brute_force_listener:
+        class: MysqlAppBundle\EventListener\BruteForceAttemptListener
+        tags:
+            - { name: kernel.event_listener, event: security.brute_force_attempt, method: onBruteForceAttempt }

@@ -18,7 +18,6 @@ class MongoDBAppKernel extends Kernel
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle(),
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
-            new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Anyx\LoginGateBundle\LoginGateBundle(),
             new MongoDBAppBundle\MongoDBAppBundle()
         ];

@@ -18,10 +18,12 @@ login_gate:
         timeout: 600 #Ban period
         watch_period: 3600 #Only for databases storage. Period of actuality attempts
 
-#register event handler
+#register event handler (optional).
 services:
       acme.brute_force_listener:
           class: Acme\BestBundle\Listener\BruteForceAttemptListener
           tags:
               - { name: kernel.event_listener, event: security.brute_force_attempt, method: onBruteForceAttempt }
 ```
+
+More examples you can see in [tests](https://github.com/anyx/LoginGateBundle/Tests)

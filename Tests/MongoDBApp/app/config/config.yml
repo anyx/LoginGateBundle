@@ -15,16 +15,6 @@ framework:
     templating:
         engines: ['php']
 
-monolog:
-    handlers:
-        main:
-            type:   stream
-            path:   "%kernel.logs_dir%/%kernel.environment%.log"
-            level:  debug
-        console:
-            type:   console
-            bubble: false
-
 # Doctrine Configuration
 doctrine_mongodb:
     connections:

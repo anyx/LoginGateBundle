@@ -26,4 +26,4 @@ services:
               - { name: kernel.event_listener, event: security.brute_force_attempt, method: onBruteForceAttempt }
 ```
 
-More examples you can see in [tests](https://github.com/anyx/LoginGateBundle/Tests)
+More examples you can see in [tests](https://github.com/anyx/LoginGateBundle/tree/master/Tests)

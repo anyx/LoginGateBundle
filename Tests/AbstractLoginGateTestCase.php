@@ -59,25 +59,21 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
             $this->assertGreaterThan(0, $crawler->filter('html:contains("Bad credentials")')->count());
         }
 
-
         $crawler = $this->client->request('GET', '/login');
         $this->assertGreaterThan(0, $crawler->filter('html:contains("You can not log on now")')->count());
 
-        try {//test event
-            $this->client->request(
-                'POST',
-                '/login',
-                [
-                    '_username' => 'baduser',
-                    '_password' => 'we'
-                ]
-            );
-        } catch (\RuntimeException $exception) {
-            $this->assertEquals('BRUTE FORCE ATTEMPT', $exception->getMessage());
-            return;
-        }
+        //test event
+        $this->client->request(
+            'POST',
+            '/login',
+            [
+                '_username' => 'baduser',
+                '_password' => 'we'
+            ]
+        );
 
-        $this->fail('Brute force attempt event has not been fired');
+        $crawler = new Crawler($this->client->getResponse()->getContent());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("BRUTE FORCE ATTEMPT")')->count());
     }
 
     public function testClearLoginAttempts()

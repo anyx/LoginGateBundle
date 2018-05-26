@@ -6,15 +6,15 @@ LoginGateBundle
 This bundle detects brute-force attacks on Symfony applications. It then will disable login for attackers for a certain period of time.
 This bundle also provides special events to execute custom handlers when a brute-force attack is detected.
 
-##Compatability
+## Compatability
 The bundle is since version 0.6 compatible with Symfony 4.
 
-##Installation
+## Installation
 Add this bundle via Composer:
 ```
 composer require anyx/login-gate-bundle
 ```
-##Configuration:
+## Configuration:
 
 Add in app/config/config.yml:
 
@@ -25,7 +25,7 @@ login_gate:
         max_count_attempts: 3
         timeout: 600 #Ban period
  ```
-#Register event handler (optional).
+# Register event handler (optional).
 ```yml
 services:
       acme.brute_force_listener:
@@ -34,7 +34,7 @@ services:
               - { name: kernel.event_listener, event: security.brute_force_attempt, method: onBruteForceAttempt }
 ```
 
-##Usage
+## Usage
 In the following example we import the checker via dependency injection in SecurityController.php.
 ```php
 namespace App\Controller;

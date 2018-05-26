@@ -25,7 +25,7 @@ login_gate:
         max_count_attempts: 3
         timeout: 600 #Ban period
  ```
-# Register event handler (optional).
+### Register event handler (optional).
 ```yml
 services:
       acme.brute_force_listener:

@@ -24,6 +24,7 @@ login_gate:
     options:
         max_count_attempts: 3
         timeout: 600 #Ban period
+        watch_period: 3600 #Only for databases storage. Period of actuality attempts
  ```
 ### Register event handler (optional).
 ```yml

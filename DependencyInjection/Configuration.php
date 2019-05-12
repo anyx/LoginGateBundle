@@ -17,8 +17,14 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('login_gate');
+        $treeBuilder = new TreeBuilder('login_gate');
+
+        if (method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            // BC layer for symfony/config 4.1 and older
+            $rootNode = $treeBuilder->root('login_gate');
+        }
 
         $rootNode
             ->children()
@@ -38,7 +44,7 @@ class Configuration implements ConfigurationInterface
                     ->thenInvalid("Invalid storage type '%s'. Available types: 'session', 'orm', 'mongodb'")
                 ->end()
         ;
-        
+
         return $treeBuilder;
     }
 

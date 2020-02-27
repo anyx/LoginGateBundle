@@ -14,11 +14,6 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
     abstract protected function loadFixtures(KernelInterface $kernel);
 
     /**
-     * @var \Symfony\Component\DependencyInjection\Container
-     */
-    protected $container;
-
-    /**
      * @var \Symfony\Component\HttpKernel\Client
      */
     protected $client;
@@ -31,7 +26,6 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
     public function setUp()
     {
         static::bootKernel();
-        $this->container = static::$kernel->getContainer();
         $this->loadFixtures(static::$kernel);
 
         $this->client = $this->getContainer()->get('test.client');
@@ -80,7 +74,7 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
     {
         $this->client->request('GET', '');
         /** @var \Anyx\LoginGateBundle\Service\BruteForceChecker $bruteForceChecker */
-        $bruteForceChecker = $this->container->get('anyx.login_gate.brute_force_checker');
+        $bruteForceChecker = static::$container->get('anyx.login_gate.brute_force_checker');
         $request = $this->client->getRequest();
 
         $this->assertEquals(0, $bruteForceChecker->getStorage()->getCountAttempts($request));
@@ -125,7 +119,7 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
      */
     protected function getContainer()
     {
-        return $this->container;
+        return static::$container;
     }
 
     /**

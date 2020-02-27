@@ -3,7 +3,7 @@
 namespace Anyx\LoginGateBundle\Event;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 use Anyx\LoginGateBundle\Service\BruteForceChecker;
 
 

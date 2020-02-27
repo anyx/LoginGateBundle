@@ -7,7 +7,7 @@ use Doctrine\Common\DataFixtures\Purger\MongoDBPurger;
 use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class MysqlAppTest extends AbstractLoginGateTestCase
+class MongoDBAppTest extends AbstractLoginGateTestCase
 {
     protected static function getKernelClass()
     {

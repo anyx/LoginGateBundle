@@ -16,9 +16,9 @@ framework:
 doctrine:
     dbal:
         driver: pdo_sqlite
-        path: %kernel.cache_dir%/%kernel.name%.db
+        path: "%kernel.cache_dir%/%kernel.name%.db"
     orm:
-        auto_generate_proxy_classes: %kernel.debug%
+        auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
 
 login_gate:
@@ -33,3 +33,6 @@ services:
         class: MysqlAppBundle\EventListener\BruteForceAttemptListener
         tags:
             - { name: kernel.event_listener, event: security.brute_force_attempt, method: onBruteForceAttempt }
+
+    MysqlAppBundle\DataFixtures:
+        autowire: true

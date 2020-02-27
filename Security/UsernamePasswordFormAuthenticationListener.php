@@ -64,7 +64,7 @@ class UsernamePasswordFormAuthenticationListener extends BaseListener
 
             $event = new BruteForceAttemptEvent($request, $this->getBruteForceChecker());
 
-            $this->getDispatcher()->dispatch(SecurityEvents::BRUTE_FORCE_ATTEMPT, $event);
+            $this->getDispatcher()->dispatch($event, SecurityEvents::BRUTE_FORCE_ATTEMPT);
 
             throw new BruteForceAttemptException('Brute force attempt');
         }

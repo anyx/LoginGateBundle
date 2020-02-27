@@ -7,6 +7,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use MysqlAppBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class Users extends AbstractFixture implements ContainerAwareInterface
 {
@@ -15,12 +16,20 @@ class Users extends AbstractFixture implements ContainerAwareInterface
      */
     protected $container;
 
+    /** @var EncoderFactoryInterface */
+    protected $encoderFactory;
+
     /**
      * {@inheritDoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
+        $this->encoderFactory = $container->get('security.encoder_factory');
+    }
+
+    public function setEncoderFactory(EncoderFactoryInterface $encoderFactory) {
+        $this->encoderFactory = $encoderFactory;
     }
 
     /**

@@ -1,7 +1,0 @@
-homepage:
-    path:     /
-    defaults: { _controller: MysqlAppBundle:Index:index }
-
-login:
-    path:     /login
-    defaults: { _controller: MysqlAppBundle:Security:login }

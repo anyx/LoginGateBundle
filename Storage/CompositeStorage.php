@@ -12,9 +12,6 @@ class CompositeStorage implements StorageInterface
      */
     protected $storages = [];
 
-    /**
-     * @param array $storages
-     */
     public function __construct(array $storages)
     {
         foreach ($storages as $storage) {
@@ -38,9 +35,6 @@ class CompositeStorage implements StorageInterface
         $this->storages[] = $storage;
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     */
     public function clearCountAttempts(Request $request)
     {
         foreach ($this->getStorages() as $storage) {
@@ -48,13 +42,10 @@ class CompositeStorage implements StorageInterface
         }
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     */
     public function getCountAttempts(Request $request)
     {
-        $countAttempts = array();
-        
+        $countAttempts = [];
+
         foreach ($this->getStorages() as $storage) {
             $countAttempts[] = $storage->getCountAttempts($request);
         }
@@ -63,7 +54,6 @@ class CompositeStorage implements StorageInterface
     }
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \DateTime | false
      */
     public function getLastAttemptDate(Request $request)
@@ -71,17 +61,14 @@ class CompositeStorage implements StorageInterface
         $date = false;
         foreach ($this->getStorages() as $storage) {
             $storageDate = $storage->getLastAttemptDate($request);
-            if (!empty($storageDate) && (empty($date) || $storageDate->diff($date)->invert == 1)) {
+            if (!empty($storageDate) && (empty($date) || 1 == $storageDate->diff($date)->invert)) {
                 $date = $storageDate;
             }
         }
+
         return $date;
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Symfony\Component\Security\Core\Exception\AuthenticationException $exception
-     */
     public function incrementCountAttempts(Request $request, AuthenticationException $exception)
     {
         foreach ($this->getStorages() as $storage) {

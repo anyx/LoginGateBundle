@@ -2,14 +2,13 @@
 
 namespace Anyx\LoginGateBundle\Security;
 
+use Anyx\LoginGateBundle\Storage\StorageInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\AuthenticationEvents;
-use Symfony\Component\Security\Core\Event\AuthenticationEvent;
 use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
-use Anyx\LoginGateBundle\Storage\StorageInterface;
 
 class AuthenticationHandler implements EventSubscriberInterface
 {
@@ -23,10 +22,6 @@ class AuthenticationHandler implements EventSubscriberInterface
      */
     private $storage;
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
-     * @param \Anyx\LoginGateBundle\Storage\StorageInterface $storage
-     */
     public function __construct(RequestStack $requestStack, StorageInterface $storage)
     {
         $this->requestStack = $requestStack;
@@ -37,7 +32,7 @@ class AuthenticationHandler implements EventSubscriberInterface
     {
         return [
             AuthenticationEvents::AUTHENTICATION_FAILURE => 'onAuthenticationFailure',
-            SecurityEvents::INTERACTIVE_LOGIN => 'onInteractiveLogin'
+            SecurityEvents::INTERACTIVE_LOGIN => 'onInteractiveLogin',
         ];
     }
 

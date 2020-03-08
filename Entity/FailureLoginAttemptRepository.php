@@ -2,58 +2,56 @@
 
 namespace Anyx\LoginGateBundle\Entity;
 
-use Doctrine\ORM\EntityRepository as Repository;
+use Anyx\LoginGateBundle\Model;
 use Anyx\LoginGateBundle\Model\FailureLoginAttemptRepositoryInterface;
+use Doctrine\ORM\EntityRepository as Repository;
 
 class FailureLoginAttemptRepository extends Repository implements FailureLoginAttemptRepositoryInterface
 {
     /**
      * @param string $ip
-     * @param \DateTime $startDate
-     * @return integer
      */
-    public function getCountAttempts($ip, \DateTime $startDate)
+    public function getCountAttempts($ip, \DateTime $startDate): int
     {
         return $this->createQueryBuilder('attempt')
-                    ->select('COUNT(attempt.id)')
-                    ->where('attempt.ip = :ip')
-                    ->andWhere('attempt.createdAt > :createdAt')
-                    ->setParameters(array(
-                        'ip'        => $ip,
-                        'createdAt' => $startDate
-                    ))
-                    ->getQuery()
-                    ->getSingleScalarResult();
+            ->select('COUNT(attempt.id)')
+            ->where('attempt.ip = :ip')
+            ->andWhere('attempt.createdAt > :createdAt')
+            ->setParameters([
+                'ip' => $ip,
+                'createdAt' => $startDate,
+            ])
+            ->getQuery()
+            ->getSingleScalarResult();
     }
-    
+
     /**
-     * 
      * @param string $ip
-     * @return \Anyx\LoginGateBundle\Entity\FailureLoginAttempt | null
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getLastAttempt($ip)
+    public function getLastAttempt($ip): Model\FailureLoginAttempt
     {
         return $this->createQueryBuilder('attempt')
-                    ->where('attempt.ip = :ip')
-                    ->orderBy('attempt.createdAt', 'DESC')
-                    ->setParameters(array(
-                        'ip'        => $ip
-                    ))
-                    ->getQuery()
-                    ->setMaxResults(1)
-                    ->getOneOrNullResult()
-        ;
+            ->where('attempt.ip = :ip')
+            ->orderBy('attempt.createdAt', 'DESC')
+            ->setParameters([
+                'ip' => $ip,
+            ])
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
     }
-    
+
     /**
      * @param string $ip
-     * @return integer
+     *
+     * @return int
      */
-    public function clearAttempts($ip)
+    public function clearAttempts($ip): void
     {
-        return $this->getEntityManager()
-                ->createQuery('DELETE FROM ' . $this->getClassMetadata()->name . ' attempt WHERE attempt.ip = :ip')
-                ->execute(['ip' => $ip])
-            ;
+        $this->getEntityManager()
+            ->createQuery(sprintf('DELETE FROM %s attempt WHERE attempt.ip = :ip', $this->getClassMetadata()->name))
+            ->execute(['ip' => $ip]);
     }
 }

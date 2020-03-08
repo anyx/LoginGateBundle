@@ -1,7 +1,4 @@
 #!/bin/bash
 
-bin/phpunit -v -c phpunit.mysql.xml
-
-if [ "${DISABLE_MONGODB}" != "true" ]; then
-    bin/phpunit -v -c phpunit.mongodb.xml
-fi
+bin/phpunit -v -c phpunit.orm.xml
+bin/phpunit -v -c phpunit.mongo.xml

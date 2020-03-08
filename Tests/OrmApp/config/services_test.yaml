@@ -1,0 +1,4 @@
+services:
+  orm.fixtures.loader:
+    alias: doctrine.fixtures.loader
+    public: true

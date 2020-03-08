@@ -1,5 +1,7 @@
 parameters:
     anyx.login_gate.authentication.listener.form.class: Anyx\LoginGateBundle\Security\UsernamePasswordFormAuthenticationListener
+    anyx.login_gate.authentication.listener.json.class: Anyx\LoginGateBundle\Security\UsernamePasswordJsonAuthenticationListener
+
 services:
     anyx.login_gate.storage.session:
         class: Anyx\LoginGateBundle\Storage\SessionStorage

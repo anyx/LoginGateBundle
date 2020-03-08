@@ -1,7 +1,0 @@
-homepage:
-    path:     /
-    defaults: { _controller: MongoDBAppBundle:Index:index }
-
-login:
-    path:     /login
-    defaults: { _controller: MongoDBAppBundle:Security:login }

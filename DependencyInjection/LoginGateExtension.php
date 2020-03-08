@@ -1,21 +1,21 @@
 <?php
-namespace Anyx\LoginGateBundle\DependencyInjection;;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+namespace Anyx\LoginGateBundle\DependencyInjection;
+
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * This is the class that loads and manages your bundle configuration
+ * This is the class that loads and manages your bundle configuration.
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
 class LoginGateExtension extends Extension
 {
-
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -27,13 +27,13 @@ class LoginGateExtension extends Extension
 
         foreach (['orm', 'mongodb'] as $storage) {
             if (in_array($storage, $config['storages'])) {
-                $loader->load('services.' . $storage . '.yml');
+                $loader->load('services.'.$storage.'.yml');
             }
         }
 
         $chosenStorages = [];
         foreach ($config['storages'] as $storage) {
-            $chosenStorages[] = 'anyx.login_gate.storage.' . $storage;
+            $chosenStorages[] = 'anyx.login_gate.storage.'.$storage;
         }
 
         $container->setParameter('anyx.login_gate.storages', $chosenStorages);

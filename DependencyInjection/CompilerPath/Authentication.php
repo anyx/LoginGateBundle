@@ -8,26 +8,24 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class Authentication implements CompilerPassInterface
 {
-    /**
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-     */
     public function process(ContainerBuilder $container)
     {
-        $container->getDefinition('security.authentication.listener.form')
-            ->setClass($container->getParameter('anyx.login_gate.authentication.listener.form.class'))
-            ->addMethodCall(
-                'setBruteForceChecker',
-                [
-                    new Reference('anyx.login_gate.brute_force_checker')
-                ]
-            )
-            ->addMethodCall(
-                'setDispatcher',
-                [
-                    new Reference('event_dispatcher')
-                ]
-            );
-
+        foreach ($this->getListenersDefinitions() as $baseListener => $bundleListener) {
+            $container->getDefinition($baseListener)
+                ->setClass($container->getParameter($bundleListener))
+                ->addMethodCall(
+                    'setBruteForceChecker',
+                    [
+                        new Reference('anyx.login_gate.brute_force_checker'),
+                    ]
+                )
+                ->addMethodCall(
+                    'setDispatcher',
+                    [
+                        new Reference('event_dispatcher'),
+                    ]
+                );
+        }
 
         $compositeStorageDefinition = $container->getDefinition('anyx.login_gate.attempt_storage');
         $chosenStorages = [];
@@ -37,5 +35,14 @@ class Authentication implements CompilerPassInterface
         }
 
         $compositeStorageDefinition->setArguments([$chosenStorages]);
+    }
+
+    protected function getListenersDefinitions(): array
+    {
+        return [
+            'security.authentication.listener.form' => 'anyx.login_gate.authentication.listener.form.class',
+            'security.authentication.listener.json' => 'anyx.login_gate.authentication.listener.json.class',
+            'security.authentication.listener.json.main' => 'anyx.login_gate.authentication.listener.json.class',
+        ];
     }
 }

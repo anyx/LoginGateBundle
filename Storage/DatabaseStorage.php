@@ -15,7 +15,7 @@ class DatabaseStorage implements StorageInterface
     private $modelClassName;
 
     /**
-     * @var integer
+     * @var int
      */
     private $watchPeriod = 200;
 
@@ -33,9 +33,8 @@ class DatabaseStorage implements StorageInterface
     }
 
     /**
-     * @param \Doctrine\Common\Persistence\ObjectManager $objectManager
      * @param string $entityClass
-     * @param integer $watchPeriod
+     * @param int    $watchPeriod
      */
     public function __construct(ObjectManager $objectManager, $entityClass, $watchPeriod)
     {
@@ -44,9 +43,6 @@ class DatabaseStorage implements StorageInterface
         $this->watchPeriod = $watchPeriod;
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     */
     public function clearCountAttempts(Request $request)
     {
         if (!$this->hasIp($request)) {
@@ -57,8 +53,7 @@ class DatabaseStorage implements StorageInterface
     }
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return integer
+     * @return int
      */
     public function getCountAttempts(Request $request)
     {
@@ -66,13 +61,12 @@ class DatabaseStorage implements StorageInterface
             return 0;
         }
         $startWatchDate = new \DateTime();
-        $startWatchDate->modify('-' . $this->getWatchPeriod(). ' second');
+        $startWatchDate->modify('-'.$this->getWatchPeriod().' second');
 
         return $this->getRepository()->getCountAttempts($request->getClientIp(), $startWatchDate);
     }
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \DateTime|false
      */
     public function getLastAttemptDate(Request $request)
@@ -89,10 +83,6 @@ class DatabaseStorage implements StorageInterface
         return false;
     }
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Symfony\Component\Security\Core\Exception\AuthenticationException $exception
-     */
     public function incrementCountAttempts(Request $request, AuthenticationException $exception)
     {
         if ($exception instanceof BruteForceAttemptException) {
@@ -108,8 +98,8 @@ class DatabaseStorage implements StorageInterface
 
         $data = [
             'exception' => $exception->getMessage(),
-            'clientIp'  => $request->getClientIp(),
-            'sessionId' => $request->getSession()->getId()
+            'clientIp' => $request->getClientIp(),
+            'sessionId' => $request->getSession()->getId(),
         ];
 
         $username = $request->get('_username');
@@ -122,11 +112,11 @@ class DatabaseStorage implements StorageInterface
         $objectManager = $this->getObjectManager();
 
         $objectManager->persist($model);
-        $objectManager->flush($model);
+        $objectManager->flush();
     }
 
     /**
-     * @return integer
+     * @return int
      */
     protected function getWatchPeriod()
     {
@@ -138,7 +128,7 @@ class DatabaseStorage implements StorageInterface
      */
     protected function createModel()
     {
-        return new $this->modelClassName;
+        return new $this->modelClassName();
     }
 
     /**
@@ -150,11 +140,10 @@ class DatabaseStorage implements StorageInterface
     }
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return boolean
+     * @return bool
      */
     protected function hasIp(Request $request)
     {
-        return $request->getClientIp() != '';
+        return '' != $request->getClientIp();
     }
 }

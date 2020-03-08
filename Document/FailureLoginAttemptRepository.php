@@ -2,30 +2,26 @@
 
 namespace Anyx\LoginGateBundle\Document;
 
-use Doctrine\ODM\MongoDB\DocumentRepository as Repository;
+use Anyx\LoginGateBundle\Model;
 use Anyx\LoginGateBundle\Model\FailureLoginAttemptRepositoryInterface;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository as BaseRepository;
 
-class FailureLoginAttemptRepository extends Repository implements FailureLoginAttemptRepositoryInterface
+class FailureLoginAttemptRepository extends BaseRepository implements FailureLoginAttemptRepositoryInterface
 {
-    /**
-     * @param string $ip
-     * @param \DateTime $startDate
-     * @return integer
-     */
-    public function getCountAttempts($ip, \DateTime $startDate)
+    public function getCountAttempts(string $ip, \DateTime $startDate): int
     {
         return $this->createQueryBuilder()
             ->field('ip')->equals($ip)
+            ->count()
             ->field('createdAt')->gt($startDate)
-            ->getQuery()->count();
+            ->getQuery()
+            ->execute();
     }
 
     /**
-     *
-     * @param string $ip
-     * @return \Anyx\LoginGateBundle\Model\FailureLoginAttempt | null
+     * @return FailureLoginAttempt | null
      */
-    public function getLastAttempt($ip)
+    public function getLastAttempt(string $ip): ?Model\FailureLoginAttempt
     {
         return $this->createQueryBuilder()
             ->field('ip')->equals($ip)
@@ -35,13 +31,13 @@ class FailureLoginAttemptRepository extends Repository implements FailureLoginAt
     }
 
     /**
-     *
      * @param string $ip
-     * @return integer
+     *
+     * @return int
      */
-    public function clearAttempts($ip)
+    public function clearAttempts($ip): void
     {
-        return $this->createQueryBuilder()
+        $this->createQueryBuilder()
             ->remove()
             ->field('ip')->equals($ip)
             ->getQuery()

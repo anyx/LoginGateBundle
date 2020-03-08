@@ -1,0 +1,8 @@
+services:
+  orm.fixtures.loader:
+    alias: doctrine.fixtures.loader
+    public: true
+
+  Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface:
+    alias: security.user_password_encoder.generic
+    public: true

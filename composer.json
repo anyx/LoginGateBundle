@@ -38,7 +38,8 @@
     "symfony/monolog-bundle": "^3.5",
     "escapestudios/symfony2-coding-standard": "3.x-dev",
     "friendsofphp/php-cs-fixer": "^2.11",
-    "phpmd/phpmd": "@stable"
+    "phpmd/phpmd": "@stable",
+    "symfony/twig-pack": "^1.0"
   },
   "autoload": {
     "psr-4": {

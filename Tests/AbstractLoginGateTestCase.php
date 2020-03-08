@@ -4,6 +4,7 @@ namespace Anyx\LoginGateBundle\Tests;
 
 use Staffim\RestClient\Client as RestClient;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -24,33 +25,56 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
         $this->loadFixtures(static::$kernel);
     }
 
-    public function testCorrectLogin()
+    public function testCorrectJsonLogin()
     {
         $peter = $this->getReference('user.peter');
 
-        $response = $this->attemptLogin($peter->getEmail(), 'password');
+        $response = $this->attemptJsonLogin($peter->getEmail(), 'password');
 
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testCatchBruteForceAttempt()
+    public function testCorrectFormLogin()
+    {
+        $peter = $this->getReference('user.peter');
+
+        $response = $this->attemptFormLogin($peter->getEmail(), 'password');
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertTrue($response->isSuccessful());
+        $this->assertStringContainsString($peter->getEmail(), $response->getContent());
+    }
+
+    public function testCatchBruteForceAttemptInJson()
     {
         $peter = $this->getReference('user.peter');
 
         for ($i = 0; $i < 3; ++$i) {
-            $response = $this->attemptLogin($peter->getEmail(), 'wrong password', 401);
+            $response = $this->attemptJsonLogin($peter->getEmail(), 'wrong password', 401);
             $this->assertEquals('Invalid credentials.', $response->getData()['error']);
         }
 
-        $response = $this->attemptLogin($peter->getEmail(), 'wrong password', 403);
+        $response = $this->attemptJsonLogin($peter->getEmail(), 'wrong password', 403);
         $this->assertEquals('Too many login attempts', $response->getData()['error']);
+    }
+
+    public function testCatchBruteForceAttemptInForm()
+    {
+        $peter = $this->getReference('user.peter');
+
+        for ($i = 0; $i < 2; ++$i) {
+            $response = $this->attemptFormLogin($peter->getEmail(), 'wrong password', 401);
+            $this->assertStringContainsString('Invalid credentials.', $response->getContent());
+        }
+
+        $response = $this->attemptFormLogin($peter->getEmail(), 'wrong password', 401);
+        $this->assertEquals('Too many login attempts', $response->getContent());
     }
 
     public function testClearLoginAttempts()
     {
         $httpClient = $this->createRestClient('');
-
-        $httpClient->get('');
+        $httpClient->get('web');
 
         /** @var \Anyx\LoginGateBundle\Service\BruteForceChecker $bruteForceChecker */
         $bruteForceChecker = static::$container->get('anyx.login_gate.brute_force_checker');
@@ -59,23 +83,45 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
         $this->assertEquals(0, $bruteForceChecker->getStorage()->getCountAttempts($request));
 
         $peter = $this->getReference('user.peter');
-        $this->attemptLogin($peter->getEmail(), 'wrong password', 401);
+        $this->attemptJsonLogin($peter->getEmail(), 'wrong password', 401);
         $this->assertEquals(1, $bruteForceChecker->getStorage()->getCountAttempts($request));
 
-        $this->attemptLogin($peter->getEmail(), 'password');
+        $this->attemptJsonLogin($peter->getEmail(), 'password');
         $this->assertEquals(0, $bruteForceChecker->getStorage()->getCountAttempts($request));
     }
 
     /**
      * @return \Staffim\RestClient\Response
      */
-    protected function attemptLogin(string $username, string $password, int $status = 200)
+    protected function attemptJsonLogin(string $username, string $password, int $status = 200)
     {
-        $httpClient = $this->createRestClient('/login');
+        $httpClient = $this->createRestClient('/api/login');
 
         $loginData = ['username' => $username, 'password' => $password];
 
         return $httpClient->post($loginData, $status);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \Exception
+     */
+    protected function attemptFormLogin(string $username, string $password, int $status = 200)
+    {
+        /** @var $client KernelBrowser */
+        $client = $this->getContainer()->get('test.client');
+        $client->followRedirects();
+
+        $crawler = $client->request('GET', '/web/login');
+        $form = $crawler->selectButton('Sign in')->form();
+
+        $form['email'] = $username;
+        $form['password'] = $password;
+
+        $client->submit($form);
+
+        return $client->getResponse();
     }
 
     /**

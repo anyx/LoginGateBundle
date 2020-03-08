@@ -47,12 +47,15 @@ class UserProvider implements UserProviderInterface
 
     public function refreshUser(UserInterface $user)
     {
-        $this->getDocumentManager()->refresh($user);
+        return $this->getDocumentManager()->getRepository($this->getRepositoryName())
+            ->findOneBy(['email' => $user->getUsername()]);
     }
 
     public function supportsClass($class)
     {
-        return is_subclass_of($class, 'MongoApp\\Model\\User');
+        $supportedClass = 'MongoApp\\Document\\User';
+
+        return $class === $supportedClass || is_subclass_of($class, $supportedClass);
     }
 
     /**

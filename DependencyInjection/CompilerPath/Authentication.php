@@ -10,6 +10,20 @@ class Authentication implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
+        $compositeStorageDefinition = $container->getDefinition('anyx.login_gate.attempt_storage');
+        $chosenStorages = [];
+
+        foreach ($container->getParameter('anyx.login_gate.storages') as $storageName) {
+            $chosenStorages[] = new Reference($storageName);
+        }
+
+        $compositeStorageDefinition->setArguments([$chosenStorages]);
+
+        $this->initAuthListeners($container);
+    }
+
+    protected function initAuthListeners(ContainerBuilder $container)
+    {
         foreach ($this->getListenersDefinitions() as $baseListener => $bundleListener) {
             $container->getDefinition($baseListener)
                 ->setClass($container->getParameter($bundleListener))
@@ -26,15 +40,6 @@ class Authentication implements CompilerPassInterface
                     ]
                 );
         }
-
-        $compositeStorageDefinition = $container->getDefinition('anyx.login_gate.attempt_storage');
-        $chosenStorages = [];
-
-        foreach ($container->getParameter('anyx.login_gate.storages') as $storageName) {
-            $chosenStorages[] = new Reference($storageName);
-        }
-
-        $compositeStorageDefinition->setArguments([$chosenStorages]);
     }
 
     protected function getListenersDefinitions(): array
@@ -42,7 +47,6 @@ class Authentication implements CompilerPassInterface
         return [
             'security.authentication.listener.form' => 'anyx.login_gate.authentication.listener.form.class',
             'security.authentication.listener.json' => 'anyx.login_gate.authentication.listener.json.class',
-            'security.authentication.listener.json.main' => 'anyx.login_gate.authentication.listener.json.class',
         ];
     }
 }

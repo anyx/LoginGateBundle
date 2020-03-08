@@ -12,11 +12,24 @@ security:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
-    main:
+    form:
+      pattern: ^/web
+      anonymous: ~
+      provider: app_user_provider
+      form_login:
+        check_path: /web/login
+        login_path: /web/login
+        username_parameter: "email"
+        password_parameter: "password"
+      guard:
+        authenticators:
+          - MongoApp\Security\MongoAppFormAuthenticator
+    api:
+      pattern: ^/api/
       anonymous: lazy
       provider: app_user_provider
       json_login:
-        check_path: /login
+        check_path: /api/login
 
       # activate different ways to authenticate
       # https://symfony.com/doc/current/security.html#firewalls-authentication

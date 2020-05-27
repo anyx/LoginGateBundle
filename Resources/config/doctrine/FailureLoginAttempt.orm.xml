@@ -9,6 +9,7 @@
       <sequence-generator sequence-name="failure_login_attempt_id_seq" allocation-size="1" initial-value="1"/>
     </id>
     <field name="ip" type="string" column="ip" length="45"/>
+    <field name="username" type="string" column="username" nullable="true"/>
     <field name="createdAt" type="datetime" column="created_at"/>
     <field name="data" type="array" column="data"/>
   </entity>

@@ -8,38 +8,36 @@ use Doctrine\ODM\MongoDB\Repository\DocumentRepository as BaseRepository;
 
 class FailureLoginAttemptRepository extends BaseRepository implements FailureLoginAttemptRepositoryInterface
 {
-    public function getCountAttempts(string $ip, \DateTime $startDate): int
+    public function getCountAttempts(string $ip, ?string $username, \DateTime $startDate): int
     {
         return $this->createQueryBuilder()
             ->field('ip')->equals($ip)
+            ->field('username')->equals($username)
             ->count()
             ->field('createdAt')->gt($startDate)
             ->getQuery()
             ->execute();
     }
 
-    /**
-     * @return FailureLoginAttempt | null
-     */
-    public function getLastAttempt(string $ip): ?Model\FailureLoginAttempt
+    public function getLastAttempt(string $ip, ?string $username): ?Model\FailureLoginAttempt
     {
         return $this->createQueryBuilder()
             ->field('ip')->equals($ip)
+            ->field('username')->equals($username)
             ->sort('createdAt', 'desc')
             ->getQuery()
             ->getSingleResult();
     }
 
     /**
-     * @param string $ip
-     *
      * @return int
      */
-    public function clearAttempts($ip): void
+    public function clearAttempts(string $ip, ?string $username): void
     {
         $this->createQueryBuilder()
             ->remove()
             ->field('ip')->equals($ip)
+            ->field('username')->equals($username)
             ->getQuery()
             ->execute();
     }

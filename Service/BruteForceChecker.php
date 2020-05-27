@@ -13,6 +13,11 @@ class BruteForceChecker
     protected $storage;
 
     /**
+     * @var UsernameResolverInterface
+     */
+    protected $usernameResolver;
+
+    /**
      * @var array
      */
     private $options = [
@@ -28,10 +33,11 @@ class BruteForceChecker
         return $this->storage;
     }
 
-    public function __construct(StorageInterface $storage, array $options)
+    public function __construct(StorageInterface $storage, UsernameResolverInterface $usernameResolver, array $options)
     {
         $this->storage = $storage;
         $this->options = $options;
+        $this->usernameResolver = $usernameResolver;
     }
 
     /**
@@ -39,9 +45,11 @@ class BruteForceChecker
      */
     public function canLogin(Request $request)
     {
-        if ($this->getStorage()->getCountAttempts($request) >= $this->options['max_count_attempts']) {
-            $lastAttemptDate = $this->getStorage()->getLastAttemptDate($request);
-            $dateAllowLogin = $lastAttemptDate->modify('+'.$this->options['timeout'].' second');
+        $username = $this->usernameResolver->resolve($request);
+
+        if ($this->getStorage()->getCountAttempts($request, $username) >= $this->options['max_count_attempts']) {
+            $lastAttemptDate = $this->getStorage()->getLastAttemptDate($request, $username);
+            $dateAllowLogin = $lastAttemptDate->modify('+' . $this->options['timeout'] . ' second');
 
             if (1 === $dateAllowLogin->diff(new \DateTime())->invert) {
                 return false;

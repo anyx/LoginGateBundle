@@ -37,4 +37,11 @@ class FailureLoginAttempt extends BaseFailureLoginAttempt
      * @var array
      */
     protected $data;
+
+    /**
+     * @MongoDB\Field(type="string")
+     *
+     * @var string
+     */
+    protected $username;
 }

@@ -11,36 +11,30 @@ class SessionStorage implements StorageInterface
 
     const DATE_LAST_LOGIN_ATTEMPT = '_security.last_failurelogin_attempt';
 
-    public function clearCountAttempts(Request $request)
+    public function clearCountAttempts(Request $request, ?string $username): void
     {
         $request->getSession()->remove(self::COUNT_LOGIN_ATTEMPTS);
         $request->getSession()->remove(self::DATE_LAST_LOGIN_ATTEMPT);
     }
 
-    /**
-     * @return int
-     */
-    public function getCountAttempts(Request $request)
+    public function getCountAttempts(Request $request, ?string $username): int
     {
         return (int) $request->getSession()->get(self::COUNT_LOGIN_ATTEMPTS, 0);
     }
 
-    public function incrementCountAttempts(Request $request, AuthenticationException $exception)
+    public function incrementCountAttempts(Request $request, ?string $username, AuthenticationException $exception): void
     {
-        $request->getSession()->set(self::COUNT_LOGIN_ATTEMPTS, $this->getCountAttempts($request) + 1);
+        $request->getSession()->set(self::COUNT_LOGIN_ATTEMPTS, $this->getCountAttempts($request, $username) + 1);
         $request->getSession()->set(self::DATE_LAST_LOGIN_ATTEMPT, new \DateTime());
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getLastAttemptDate(Request $request)
+    public function getLastAttemptDate(Request $request, ?string $username): ?\DateTimeInterface
     {
         $session = $request->getSession();
         if ($session->has(self::DATE_LAST_LOGIN_ATTEMPT)) {
             return clone $session->get(self::DATE_LAST_LOGIN_ATTEMPT);
         }
 
-        return false;
+        return null;
     }
 }

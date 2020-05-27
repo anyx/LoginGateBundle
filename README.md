@@ -5,6 +5,7 @@ LoginGateBundle
 [![Latest Stable Version](https://poser.pugx.org/anyx/login-gate-bundle/v/stable)](https://packagist.org/packages/anyx/login-gate-bundle)
 [![Total Downloads](https://poser.pugx.org/anyx/login-gate-bundle/downloads)](https://packagist.org/packages/anyx/login-gate-bundle)
 [![License](https://poser.pugx.org/anyx/login-gate-bundle/license)](https://packagist.org/packages/anyx/login-gate-bundle)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/zryaneskazhev)
 
 This bundle detects brute-force attacks on Symfony applications. It then will disable login for attackers for a certain period of time.
 This bundle also provides special events to execute custom handlers when a brute-force attack is detected.
@@ -22,6 +23,8 @@ composer require anyx/login-gate-bundle
 Add in config/packages/login_gate.yml:
 
 ```yml
+# config/packages/login_gate.yaml
+
 login_gate:
     storages: ['orm'] # Attempts storages. Available storages: ['orm', 'session', 'mongodb']
     options:
@@ -29,6 +32,51 @@ login_gate:
         timeout: 600 #Ban period
         watch_period: 3600 #Only for databases storage. Period of actuality attempts
  ```
+
+### :warning: Username resolver (optional).
+
+Since Symfony does not provide a common way to retrieve passed username 
+from `AuthenticationFailureEvent` for every possible authentication scenario, 
+by default this bundle is trying to retrieve username from `_username` parameter in request's form data.
+
+It means, that if you are using different authentication scenario (`json_login`, for example), 
+users with same ip addresses will be indistinguishable. To prevent this,
+you probably should create own username resolver and register it in `username_resolver` option:
+
+```php
+<?php
+
+namespace App\Service;
+
+use Anyx\LoginGateBundle\Service\UsernameResolverInterface;
+use Symfony\Component\HttpFoundation\Request;
+
+/**
+ * Username resolver for json login
+ */
+class UsernameResolver implements UsernameResolverInterface
+{
+    public function resolve(Request $request)
+    {
+        $requestData = json_decode($request->getContent(), true);
+
+        return is_array($requestData) && array_key_exists('username', $requestData) ? $requestData['username'] : null;
+    }
+}
+```
+
+```yml
+# config/packages/login_gate.yaml
+login_gate:
+    storages: ['orm'] # Attempts storages. Available storages: ['orm', 'session', 'mongodb']
+    options:
+        max_count_attempts: 3
+        timeout: 600 #Ban period
+        watch_period: 3600 #Only for databases storage. Period of actuality attempts
+    username_resolver: App\Service\UsernameResolver
+ ```
+
+
 
 ### Register event handler (optional).
 ```yml

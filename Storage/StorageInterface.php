@@ -7,14 +7,11 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 interface StorageInterface
 {
-    /**
-     * @return int
-     */
-    public function getCountAttempts(Request $request);
+    public function getCountAttempts(Request $request, ?string $username): int;
 
-    public function incrementCountAttempts(Request $request, AuthenticationException $exception);
+    public function incrementCountAttempts(Request $request, ?string $username, AuthenticationException $exception): void;
 
-    public function clearCountAttempts(Request $request);
+    public function clearCountAttempts(Request $request, ?string $username): void;
 
-    public function getLastAttemptDate(Request $request);
+    public function getLastAttemptDate(Request $request, ?string $username): ?\DateTimeInterface;
 }

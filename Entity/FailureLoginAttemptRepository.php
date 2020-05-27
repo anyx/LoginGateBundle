@@ -8,50 +8,68 @@ use Doctrine\ORM\EntityRepository as Repository;
 
 class FailureLoginAttemptRepository extends Repository implements FailureLoginAttemptRepositoryInterface
 {
-    /**
-     * @param string $ip
-     */
-    public function getCountAttempts($ip, \DateTime $startDate): int
+    public function getCountAttempts(string $ip, ?string $username, \DateTime $startDate): int
     {
-        return $this->createQueryBuilder('attempt')
+        $queryBuilder = $this->createQueryBuilder('attempt')
             ->select('COUNT(attempt.id)')
             ->where('attempt.ip = :ip')
             ->andWhere('attempt.createdAt > :createdAt')
             ->setParameters([
                 'ip' => $ip,
                 'createdAt' => $startDate,
-            ])
+            ]);
+
+        if (!$username) {
+            $queryBuilder->andWhere('attempt.username IS NULL');
+        } else {
+            $queryBuilder->andWhere('attempt.username = :username')->setParameter('username', $username);
+        }
+
+        return $queryBuilder
             ->getQuery()
             ->getSingleScalarResult();
     }
 
-    /**
-     * @param string $ip
-     *
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function getLastAttempt($ip): Model\FailureLoginAttempt
+    public function getLastAttempt(string $ip, ?string $username): ?Model\FailureLoginAttempt
     {
-        return $this->createQueryBuilder('attempt')
+        $queryBuilder = $this->createQueryBuilder('attempt')
             ->where('attempt.ip = :ip')
             ->orderBy('attempt.createdAt', 'DESC')
             ->setParameters([
                 'ip' => $ip,
-            ])
+            ]);
+
+        if (!$username) {
+            $queryBuilder->andWhere('attempt.username IS NULL');
+        } else {
+            $queryBuilder->andWhere('attempt.username = :username')->setParameter('username', $username);
+        }
+
+        return $queryBuilder
             ->getQuery()
             ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 
-    /**
-     * @param string $ip
-     *
-     * @return int
-     */
-    public function clearAttempts($ip): void
+    public function clearAttempts(string $ip, ?string $username): void
     {
+        $sql = 'DELETE FROM %s attempt WHERE attempt.ip = :ip';
+        $parameters = ['ip' => $ip];
+
+        if (!$username) {
+            $sql .= ' AND attempt.username IS NULL';
+        } else {
+            $sql .= ' AND attempt.username = :username';
+            $parameters['username'] = $username;
+        }
+
         $this->getEntityManager()
-            ->createQuery(sprintf('DELETE FROM %s attempt WHERE attempt.ip = :ip', $this->getClassMetadata()->name))
-            ->execute(['ip' => $ip]);
+            ->createQuery(
+                sprintf(
+                    $sql,
+                    $this->getClassMetadata()->name
+                )
+            )
+            ->execute($parameters);
     }
 }

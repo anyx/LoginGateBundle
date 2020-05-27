@@ -22,22 +22,26 @@ class LoginGateExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
         foreach (['orm', 'mongodb'] as $storage) {
             if (in_array($storage, $config['storages'])) {
-                $loader->load('services.'.$storage.'.yml');
+                $loader->load('services.' . $storage . '.yml');
             }
         }
 
         $chosenStorages = [];
         foreach ($config['storages'] as $storage) {
-            $chosenStorages[] = 'anyx.login_gate.storage.'.$storage;
+            $chosenStorages[] = 'anyx.login_gate.storage.' . $storage;
         }
 
         $container->setParameter('anyx.login_gate.storages', $chosenStorages);
         $container->setParameter('anyx.login_gate.brute_force_checker_options', $config['options']);
         $container->setParameter('anyx.login_gate.watch_period', $config['options']['watch_period']);
+
+        if (array_key_exists('username_resolver', $config) && $config['username_resolver']) {
+            $container->setAlias('anyx.login_gate.username_resolver', $config['username_resolver']);
+        }
     }
 }

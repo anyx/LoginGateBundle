@@ -80,14 +80,35 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
         $bruteForceChecker = static::$container->get('anyx.login_gate.brute_force_checker');
         $request = $httpClient->getKernelBrowser()->getRequest();
 
-        $this->assertEquals(0, $bruteForceChecker->getStorage()->getCountAttempts($request));
-
         $peter = $this->getReference('user.peter');
+        $this->assertEquals(0, $bruteForceChecker->getStorage()->getCountAttempts($request, $peter->getUsername()));
+
         $this->attemptJsonLogin($peter->getEmail(), 'wrong password', 401);
-        $this->assertEquals(1, $bruteForceChecker->getStorage()->getCountAttempts($request));
+        $this->assertEquals(1, $bruteForceChecker->getStorage()->getCountAttempts($request, $peter->getUsername()));
 
         $this->attemptJsonLogin($peter->getEmail(), 'password');
-        $this->assertEquals(0, $bruteForceChecker->getStorage()->getCountAttempts($request));
+        $this->assertEquals(0, $bruteForceChecker->getStorage()->getCountAttempts($request, $peter->getUsername()));
+    }
+
+    public function testCheckUsernamesFromSameIpAddress()
+    {
+        $peter = $this->getReference('user.peter');
+        $helen = $this->getReference('user.helen');
+
+        $httpClient = $this->createRestClient('');
+        $httpClient->get('web');
+
+        $this->attemptJsonLogin($peter->getEmail(), 'wrong password', 401);
+        $this->attemptJsonLogin($peter->getEmail(), 'wrong password', 401);
+        $this->attemptJsonLogin($peter->getEmail(), 'wrong password', 401);
+
+        $responseData = $this->attemptJsonLogin($peter->getEmail(), 'wrong password', 403)->getData();
+        $this->assertEquals('Too many login attempts', $responseData['error']);
+
+        $this->assertEquals(200, $this->attemptJsonLogin($helen->getEmail(), 'password', 200)->getStatusCode());
+
+        $responseData = $this->attemptJsonLogin($peter->getEmail(), 'wrong password', 403)->getData();
+        $this->assertEquals('Too many login attempts', $responseData['error']);
     }
 
     /**

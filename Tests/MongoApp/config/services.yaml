@@ -4,32 +4,34 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-  env(MONGODB_URL): "mongodb://localhost:27017"
-  env(MONGODB_DB): "login_gate"
+    env(MONGODB_URL): "mongodb://localhost:27017"
+    env(MONGODB_DB): "login_gate"
 
 services:
-  # default configuration for services in *this* file
-  _defaults:
-    autowire: true      # Automatically injects dependencies in your services.
-    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-  Anyx\LoginGateBundle\Service\BruteForceChecker: "@anyx.login_gate.brute_force_checker"
+    Anyx\LoginGateBundle\Service\BruteForceChecker: "@anyx.login_gate.brute_force_checker"
 
-  # makes classes in src/ available to be used as services
-  # this creates a service per class whose id is the fully-qualified class name
-  MongoApp\:
-    resource: '../src/*'
-    exclude: '../src/{DependencyInjection,Document,Migrations,Tests,Kernel.php}'
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    MongoApp\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Document,Migrations,Tests,Kernel.php}'
 
-  # controllers are imported separately to make sure services can be injected
-  # as action arguments even if you don't extend any base controller class
-  MongoApp\Controller\:
-    resource: '../src/Controller'
-    tags: ['controller.service_arguments']
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    MongoApp\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
 
-  MongoApp\EventListener\BruteForceAttemptListener:
-    class: MongoApp\EventListener\BruteForceAttemptListener
-    tags:
-      - { name: kernel.event_listener, event: security.brute_force_attempt, method: onBruteForceAttempt }
+    MongoApp\EventListener\BruteForceAttemptListener:
+        class: MongoApp\EventListener\BruteForceAttemptListener
+        tags:
+            - { name: kernel.event_listener, event: security.brute_force_attempt, method: onBruteForceAttempt }
 
-  doctrine: "@doctrine_mongodb"
+    doctrine: "@doctrine_mongodb"
+
+    MongoApp\Service\UsernameResolver: ~

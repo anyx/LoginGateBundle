@@ -5,12 +5,16 @@ parameters:
 services:
     anyx.login_gate.storage.session:
         class: Anyx\LoginGateBundle\Storage\SessionStorage
+    anyx.login_gate.username_resolver.default:
+        class: Anyx\LoginGateBundle\Service\LoginFormUsernameResolver
+    anyx.login_gate.username_resolver:
+        alias: anyx.login_gate.username_resolver.default
     anyx.login_gate.attempt_storage:
         class: Anyx\LoginGateBundle\Storage\CompositeStorage
     anyx.login_gate.brute_force_checker:
         class: Anyx\LoginGateBundle\Service\BruteForceChecker
-        arguments: ['@anyx.login_gate.attempt_storage', '%anyx.login_gate.brute_force_checker_options%']
-    anyx.login_gate.autentication_handler:
+        arguments: ['@anyx.login_gate.attempt_storage', '@anyx.login_gate.username_resolver', '%anyx.login_gate.brute_force_checker_options%']
+    anyx.login_gate.authentication_handler:
         class: Anyx\LoginGateBundle\Security\AuthenticationHandler
         arguments: ['@request_stack', '@anyx.login_gate.attempt_storage']
         tags:

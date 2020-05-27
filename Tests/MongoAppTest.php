@@ -19,7 +19,7 @@ class MongoAppTest extends AbstractLoginGateTestCase
         $dm = $kernel->getContainer()->get('doctrine_mongodb.odm.document_manager');
 
         $loader = new ContainerAwareLoader($kernel->getContainer());
-        $loader->loadFromDirectory($kernel->getProjectDir().'/src/DataFixtures');
+        $loader->loadFromDirectory($kernel->getProjectDir() . '/src/DataFixtures');
 
         $fixtures = $loader->getFixtures();
 

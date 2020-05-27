@@ -1,4 +1,4 @@
 services:
-  orm.fixtures.loader:
-    alias: doctrine.fixtures.loader
-    public: true
+    orm.fixtures.loader:
+        alias: doctrine.fixtures.loader
+        public: true

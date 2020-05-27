@@ -29,6 +29,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('watch_period')->defaultValue(10000)->end()
+                ->scalarNode('username_resolver')->defaultNull()->end()
                 ->arrayNode('options')
                     ->children()
                         ->scalarNode('max_count_attempts')->defaultValue(3)->end()

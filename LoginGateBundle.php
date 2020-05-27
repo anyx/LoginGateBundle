@@ -13,5 +13,6 @@ class LoginGateBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new CompilerPath\Authentication());
+        $container->addCompilerPass(new CompilerPath\UsernameResolverCompilerPass());
     }
 }

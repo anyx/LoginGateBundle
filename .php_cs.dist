@@ -2,13 +2,14 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
-    ->exclude('var')
-;
+    ->exclude('var');
 
 return PhpCsFixer\Config::create()
     ->setRules([
         '@Symfony' => true,
         'array_syntax' => ['syntax' => 'short'],
+        'phpdoc_align' => ['align' => 'left'],
+        'concat_space' => ['spacing' => 'one'],
     ])
     ->setFinder($finder)
 ;

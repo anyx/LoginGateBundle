@@ -15,6 +15,7 @@
     }
   ],
   "require": {
+    "ext-json": "*",
     "symfony/config": "^3.3|^4.0|^5.0",
     "symfony/dependency-injection": "^3.3|^4.0|^5.0",
     "symfony/security-bundle": "^3.3|^4.0|^5.0",
@@ -53,7 +54,7 @@
   },
   "scripts": {
     "set-coding-standard": "bin/phpcs --config-set installed_paths vendor/escapestudios/symfony2-coding-standard",
-    "phpcs": "bin/phpcs Document/ Entity/ Event/ Exception/ Model/ Security/ Service/ Storage/",
+    "phpcs": "bin/phpcs --exclude=Generic.Files.LineLength Document/ Entity/ Event/ Exception/ Model/ Security/ Service/ Storage/",
     "phpcbf": "bin/phpcbf Document/ Entity/ Event/ Exception/ Model/ Security/ Service/ Storage/",
     "cs:fix": "php-cs-fixer fix",
     "post-install-cmd": [

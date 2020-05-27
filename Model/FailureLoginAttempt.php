@@ -15,9 +15,14 @@ abstract class FailureLoginAttempt
     protected $ip;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      */
     protected $createdAt;
+
+    /**
+     * @var string|null
+     */
+    protected $username;
 
     /**
      * @var array
@@ -34,22 +39,22 @@ abstract class FailureLoginAttempt
         return $this->id;
     }
 
-    public function getIp()
+    public function getIp(): ?string
     {
         return $this->ip;
     }
 
-    public function setIp($ip)
+    public function setIp(string $ip)
     {
         $this->ip = $ip;
     }
 
-    public function getCreatedAt()
+    public function getCreatedAt(): \DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt(\DateTimeInterface $createdAt)
     {
         $this->createdAt = $createdAt;
     }
@@ -62,5 +67,15 @@ abstract class FailureLoginAttempt
     public function setData($data)
     {
         $this->data = $data;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(?string $username)
+    {
+        $this->username = $username;
     }
 }

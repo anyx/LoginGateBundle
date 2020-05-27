@@ -7,15 +7,15 @@ interface FailureLoginAttemptRepositoryInterface
     /**
      * @return int
      */
-    public function getCountAttempts(string $ip, \DateTime $startDate);
+    public function getCountAttempts(string $ip, ?string $username, \DateTime $startDate);
 
     /**
      * @return FailureLoginAttempt | null
      */
-    public function getLastAttempt(string $ip): ?FailureLoginAttempt;
+    public function getLastAttempt(string $ip, ?string $username): ?FailureLoginAttempt;
 
     /**
      * @return int
      */
-    public function clearAttempts(string $ip): void;
+    public function clearAttempts(string $ip, ?string $username): void;
 }

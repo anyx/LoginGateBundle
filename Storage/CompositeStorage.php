@@ -35,32 +35,29 @@ class CompositeStorage implements StorageInterface
         $this->storages[] = $storage;
     }
 
-    public function clearCountAttempts(Request $request)
+    public function clearCountAttempts(Request $request, ?string $username): void
     {
         foreach ($this->getStorages() as $storage) {
-            $storage->clearCountAttempts($request);
+            $storage->clearCountAttempts($request, $username);
         }
     }
 
-    public function getCountAttempts(Request $request)
+    public function getCountAttempts(Request $request, ?string $username): int
     {
         $countAttempts = [];
 
         foreach ($this->getStorages() as $storage) {
-            $countAttempts[] = $storage->getCountAttempts($request);
+            $countAttempts[] = $storage->getCountAttempts($request, $username);
         }
 
         return (int) max($countAttempts);
     }
 
-    /**
-     * @return \DateTime | false
-     */
-    public function getLastAttemptDate(Request $request)
+    public function getLastAttemptDate(Request $request, ?string $username): ?\DateTimeInterface
     {
-        $date = false;
+        $date = null;
         foreach ($this->getStorages() as $storage) {
-            $storageDate = $storage->getLastAttemptDate($request);
+            $storageDate = $storage->getLastAttemptDate($request, $username);
             if (!empty($storageDate) && (empty($date) || 1 == $storageDate->diff($date)->invert)) {
                 $date = $storageDate;
             }
@@ -69,10 +66,10 @@ class CompositeStorage implements StorageInterface
         return $date;
     }
 
-    public function incrementCountAttempts(Request $request, AuthenticationException $exception)
+    public function incrementCountAttempts(Request $request, ?string $username, AuthenticationException $exception): void
     {
         foreach ($this->getStorages() as $storage) {
-            $storage->incrementCountAttempts($request, $exception);
+            $storage->incrementCountAttempts($request, $username, $exception);
         }
     }
 }

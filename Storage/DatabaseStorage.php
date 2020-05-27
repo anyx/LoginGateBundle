@@ -3,6 +3,7 @@
 namespace Anyx\LoginGateBundle\Storage;
 
 use Anyx\LoginGateBundle\Exception\BruteForceAttemptException;
+use Anyx\LoginGateBundle\Model\FailureLoginAttempt;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -34,7 +35,7 @@ class DatabaseStorage implements StorageInterface
 
     /**
      * @param string $entityClass
-     * @param int    $watchPeriod
+     * @param int $watchPeriod
      */
     public function __construct(ObjectManager $objectManager, $entityClass, $watchPeriod)
     {
@@ -43,47 +44,42 @@ class DatabaseStorage implements StorageInterface
         $this->watchPeriod = $watchPeriod;
     }
 
-    public function clearCountAttempts(Request $request)
+    public function clearCountAttempts(Request $request, ?string $username): void
     {
         if (!$this->hasIp($request)) {
             return;
         }
 
-        $this->getRepository()->clearAttempts($request->getClientIp());
+        $this->getRepository()->clearAttempts($request->getClientIp(), $username);
     }
 
-    /**
-     * @return int
-     */
-    public function getCountAttempts(Request $request)
+    public function getCountAttempts(Request $request, ?string $username): int
     {
         if (!$this->hasIp($request)) {
             return 0;
         }
-        $startWatchDate = new \DateTime();
-        $startWatchDate->modify('-'.$this->getWatchPeriod().' second');
 
-        return $this->getRepository()->getCountAttempts($request->getClientIp(), $startWatchDate);
+        $startWatchDate = new \DateTime();
+        $startWatchDate->modify('-' . $this->getWatchPeriod() . ' second');
+
+        return $this->getRepository()->getCountAttempts($request->getClientIp(), $username, $startWatchDate);
     }
 
-    /**
-     * @return \DateTime|false
-     */
-    public function getLastAttemptDate(Request $request)
+    public function getLastAttemptDate(Request $request, ?string $username): ?\DateTimeInterface
     {
         if (!$this->hasIp($request)) {
-            return false;
+            return null;
         }
 
-        $lastAttempt = $this->getRepository()->getLastAttempt($request->getClientIp());
+        $lastAttempt = $this->getRepository()->getLastAttempt($request->getClientIp(), $username);
         if (!empty($lastAttempt)) {
             return $lastAttempt->getCreatedAt();
         }
 
-        return false;
+        return null;
     }
 
-    public function incrementCountAttempts(Request $request, AuthenticationException $exception)
+    public function incrementCountAttempts(Request $request, ?string $username, AuthenticationException $exception): void
     {
         if ($exception instanceof BruteForceAttemptException) {
             return;
@@ -95,17 +91,13 @@ class DatabaseStorage implements StorageInterface
         $model = $this->createModel();
 
         $model->setIp($request->getClientIp());
+        $model->setUsername($username);
 
         $data = [
             'exception' => $exception->getMessage(),
             'clientIp' => $request->getClientIp(),
             'sessionId' => $request->getSession()->getId(),
         ];
-
-        $username = $request->get('_username');
-        if (!empty($username)) {
-            $data['user'] = $username;
-        }
 
         $model->setData($data);
 
@@ -124,7 +116,7 @@ class DatabaseStorage implements StorageInterface
     }
 
     /**
-     * @return string
+     * @return FailureLoginAttempt
      */
     protected function createModel()
     {

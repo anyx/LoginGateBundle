@@ -50,7 +50,7 @@ abstract class AbstractFixture extends Fixture implements ContainerAwareInterfac
 
             $this->postPersist($entity, $datum, $code, $manager);
 
-            $this->setReference($this->getReferenceCode().'.'.$code, $entity);
+            $this->setReference($this->getReferenceCode() . '.' . $code, $entity);
 
             $manager->flush();
         }
@@ -66,7 +66,7 @@ abstract class AbstractFixture extends Fixture implements ContainerAwareInterfac
     protected function fillEntity($entity, array $fields)
     {
         foreach ($fields as $field => $value) {
-            $methodName = 'set'.ucfirst($field);
+            $methodName = 'set' . ucfirst($field);
             if (is_callable([$entity, $methodName])) {
                 $entity->$methodName($value);
             }

@@ -124,7 +124,7 @@ class SecurityController extends AbstractController
 ```
 Also there is ability to clear login attempts for request (it happens after successful authentication by default):
 ```php
-$this->bruteForceChecker->getStorage()->clearCountAttempts($request);
+$this->bruteForceChecker->getStorage()->clearCountAttempts($request, $username);
 ```
 
 For more examples take a look at the [tests](https://github.com/anyx/LoginGateBundle/tree/master/Tests).

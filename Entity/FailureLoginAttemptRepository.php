@@ -19,9 +19,7 @@ class FailureLoginAttemptRepository extends Repository implements FailureLoginAt
                 'createdAt' => $startDate,
             ]);
 
-        if (!$username) {
-            $queryBuilder->andWhere('attempt.username IS NULL');
-        } else {
+        if ($username) {
             $queryBuilder->andWhere('attempt.username = :username')->setParameter('username', $username);
         }
 
@@ -39,9 +37,7 @@ class FailureLoginAttemptRepository extends Repository implements FailureLoginAt
                 'ip' => $ip,
             ]);
 
-        if (!$username) {
-            $queryBuilder->andWhere('attempt.username IS NULL');
-        } else {
+        if ($username) {
             $queryBuilder->andWhere('attempt.username = :username')->setParameter('username', $username);
         }
 
@@ -56,9 +52,7 @@ class FailureLoginAttemptRepository extends Repository implements FailureLoginAt
         $sql = 'DELETE FROM %s attempt WHERE attempt.ip = :ip';
         $parameters = ['ip' => $ip];
 
-        if (!$username) {
-            $sql .= ' AND attempt.username IS NULL';
-        } else {
+        if ($username) {
             $sql .= ' AND attempt.username = :username';
             $parameters['username'] = $username;
         }

@@ -96,7 +96,7 @@ class DatabaseStorage implements StorageInterface
         $data = [
             'exception' => $exception->getMessage(),
             'clientIp' => $request->getClientIp(),
-            'sessionId' => $request->getSession()->getId(),
+            'sessionId' => $request->hasSession() ? $request->getSession()->getId() : null,
         ];
 
         $model->setData($data);

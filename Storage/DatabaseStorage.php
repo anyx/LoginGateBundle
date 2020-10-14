@@ -4,7 +4,7 @@ namespace Anyx\LoginGateBundle\Storage;
 
 use Anyx\LoginGateBundle\Exception\BruteForceAttemptException;
 use Anyx\LoginGateBundle\Model\FailureLoginAttempt;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
@@ -21,12 +21,12 @@ class DatabaseStorage implements StorageInterface
     private $watchPeriod = 200;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectManager
+     * @var \Doctrine\Persistence\ObjectManager
      */
     private $objectManager;
 
     /**
-     * @return \Doctrine\Common\Persistence\ObjectManager
+     * @return \Doctrine\Persistence\ObjectManager
      */
     public function getObjectManager()
     {

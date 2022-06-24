@@ -36,7 +36,7 @@ login_gate:
 ### :warning: Username resolver (optional).
 
 Since Symfony does not provide a common way to retrieve passed username 
-from `AuthenticationFailureEvent` for every possible authentication scenario, 
+from `LoginFailureEvent` for every possible authentication scenario, 
 by default this bundle is trying to retrieve username from `_username` parameter in request's form data.
 
 It means, that if you are using different authentication scenario (`json_login`, for example), 

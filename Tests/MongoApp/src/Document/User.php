@@ -3,12 +3,13 @@
 namespace MongoApp\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @MongoDB\Document()
  */
-class User implements UserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @MongoDB\Id
@@ -41,6 +42,11 @@ class User implements UserInterface
     public function __construct(string $email)
     {
         $this->email = $email;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->getUsername();
     }
 
     public function getId(): ?int

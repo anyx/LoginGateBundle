@@ -4,10 +4,14 @@ namespace MongoApp\DataFixtures;
 
 use Doctrine\Persistence\ObjectManager;
 use MongoApp\Document\User;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends AbstractFixture
 {
+    public function __construct(private UserPasswordHasherInterface $hasher)
+    {
+    }
+
     public function getData(): array
     {
         return [
@@ -22,11 +26,6 @@ class UserFixtures extends AbstractFixture
         ];
     }
 
-    public function getPasswordEncoder(): UserPasswordEncoderInterface
-    {
-        return $this->container->get(UserPasswordEncoderInterface::class);
-    }
-
     public function getReferenceCode(): string
     {
         return 'user';
@@ -36,7 +35,7 @@ class UserFixtures extends AbstractFixture
     {
         $user = new User($datum['email']);
 
-        $user->setPassword($this->getPasswordEncoder()->encodePassword($user, $datum['password']));
+        $user->setPassword($this->hasher->hashPassword($user, $datum['password']));
 
         return $user;
     }

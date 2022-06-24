@@ -2,12 +2,14 @@
 
 namespace Anyx\LoginGateBundle\Tests;
 
+use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Staffim\RestClient\Client as RestClient;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 abstract class AbstractLoginGateTestCase extends KernelTestCase
@@ -42,7 +44,6 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
         $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertTrue($response->isSuccessful());
-        $this->assertStringContainsString($peter->getEmail(), $response->getContent());
     }
 
     public function testCatchBruteForceAttemptInJson()
@@ -77,7 +78,7 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
         $httpClient->get('web');
 
         /** @var \Anyx\LoginGateBundle\Service\BruteForceChecker $bruteForceChecker */
-        $bruteForceChecker = static::$container->get('anyx.login_gate.brute_force_checker');
+        $bruteForceChecker = static::getContainer()->get('anyx.login_gate.brute_force_checker');
         $request = $httpClient->getKernelBrowser()->getRequest();
 
         $peter = $this->getReference('user.peter');
@@ -123,12 +124,7 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
         return $httpClient->post($loginData, $status);
     }
 
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Exception
-     */
-    protected function attemptFormLogin(string $username, string $password, int $status = 200)
+    protected function attemptFormLogin(string $username, string $password): Response
     {
         /** @var $client KernelBrowser */
         $client = $this->getContainer()->get('test.client');
@@ -145,28 +141,12 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
         return $client->getResponse();
     }
 
-    /**
-     * @param string $name
-     *
-     * @return mixed
-     */
-    protected function getReference($name)
+    protected function getReference(string $name)
     {
         return $this->getReferenceRepository()->getReference($name);
     }
 
-    /**
-     * @return \Symfony\Component\DependencyInjection\Container
-     */
-    protected function getContainer()
-    {
-        return static::$container;
-    }
-
-    /**
-     * @return \Doctrine\Common\DataFixtures\ReferenceRepository
-     */
-    protected function getReferenceRepository()
+    protected function getReferenceRepository(): ReferenceRepository
     {
         return self::$referenceRepository;
     }
@@ -176,12 +156,14 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
         $application = new Application(static::$kernel);
         $application->setAutoExit(false);
 
-        $input = new ArrayInput(array_merge(
-            [
-                'command' => $command,
-            ],
-            $options
-        ));
+        $input = new ArrayInput(
+            array_merge(
+                [
+                    'command' => $command,
+                ],
+                $options
+            )
+        );
 
         $output = new BufferedOutput();
         $application->run($input, $output);

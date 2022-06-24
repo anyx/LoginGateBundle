@@ -11,7 +11,7 @@ class UsernameResolverCompilerPass implements CompilerPassInterface
     {
         if ($container->hasAlias('anyx.login_gate.username_resolver')) {
             $usernameResolverDefinition = $container->findDefinition('anyx.login_gate.username_resolver');
-            $container->getDefinition('anyx.login_gate.authentication_handler')->addArgument($usernameResolverDefinition);
+            $container->getDefinition('anyx.login_gate.security_subscriber')->addArgument($usernameResolverDefinition);
         }
     }
 }

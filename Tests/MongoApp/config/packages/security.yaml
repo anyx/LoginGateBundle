@@ -1,43 +1,37 @@
 security:
-    encoders:
-        MongoApp\Document\User:
-            algorithm: auto
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             id: MongoApp\Service\UserProvider
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         form:
             pattern: ^/web
-            anonymous: ~
             provider: app_user_provider
             form_login:
-                check_path: /web/login
-                login_path: /web/login
+                check_path: web_login
+                login_path: web_login
                 username_parameter: "email"
                 password_parameter: "password"
-            guard:
-                authenticators:
-                    - MongoApp\Security\MongoAppFormAuthenticator
+            logout:
+                path: app_logout
+
         api:
             pattern: ^/api/
-            anonymous: lazy
             provider: app_user_provider
             json_login:
                 check_path: /api/login
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#firewalls-authentication
-
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
-
     access_control:
-        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, roles: PUBLIC_ACCESS }
+        - { path: ^/web, roles: ROLE_USER }
+        - { path: ^/web/login, roles: PUBLIC_ACCESS }
         - { path: ^/private, roles: ROLE_ADMIN }
         - { path: ^/profile, roles: ROLE_USER }

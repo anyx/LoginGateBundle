@@ -9,14 +9,27 @@ use Symfony\Component\Routing\Annotation\Route;
 class IndexController extends AbstractController
 {
     /**
-     * @Route("/web", name="home", methods={"GET"})
+     * @Route("/", name="home", methods={"GET"})
      */
-    public function indexAction()
+    public function index()
     {
         $user = $this->getUser();
 
         return new JsonResponse([
             'message' => 'Index page',
+            'user' => $user ? $user->getUsername() : 'guest',
+        ]);
+    }
+
+    /**
+     * @Route("/web", name="web_home", methods={"GET"})
+     */
+    public function webIndex()
+    {
+        $user = $this->getUser();
+
+        return new JsonResponse([
+            'message' => 'Web Index page',
             'user' => $user ? $user->getUsername() : 'guest',
         ]);
     }

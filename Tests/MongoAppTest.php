@@ -4,12 +4,11 @@ namespace Anyx\LoginGateBundle\Tests;
 
 use Doctrine\Common\DataFixtures\Executor\MongoDBExecutor;
 use Doctrine\Common\DataFixtures\Purger\MongoDBPurger;
-use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class MongoAppTest extends AbstractLoginGateTestCase
 {
-    protected static function getKernelClass()
+    protected static function getKernelClass(): string
     {
         return \MongoApp\Kernel::class;
     }
@@ -18,10 +17,10 @@ class MongoAppTest extends AbstractLoginGateTestCase
     {
         $dm = $kernel->getContainer()->get('doctrine_mongodb.odm.document_manager');
 
-        $loader = new ContainerAwareLoader($kernel->getContainer());
-        $loader->loadFromDirectory($kernel->getProjectDir() . '/src/DataFixtures');
+        $fixturesLoader = static::getContainer()->get('doctrine_mongodb.odm.symfony.fixtures.loader');
+        $fixturesLoader->loadFromDirectory($kernel->getProjectDir() . '/src/DataFixtures');
 
-        $fixtures = $loader->getFixtures();
+        $fixtures = $fixturesLoader->getFixtures();
 
         $purger = new MongoDBPurger($dm);
         $executor = new MongoDBExecutor($dm, $purger);

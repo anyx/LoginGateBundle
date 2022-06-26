@@ -4,14 +4,13 @@ namespace OrmApp\DataFixtures;
 
 use Doctrine\Persistence\ObjectManager;
 use OrmApp\Entity\User;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends AbstractFixture
 {
-    /**
-     * @var UserPasswordEncoderInterface
-     */
-    private $passwordEncoder;
+    public function __construct(private UserPasswordHasherInterface $passwordHasher)
+    {
+    }
 
     public function getData(): array
     {
@@ -27,16 +26,6 @@ class UserFixtures extends AbstractFixture
         ];
     }
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
-    {
-        $this->passwordEncoder = $passwordEncoder;
-    }
-
-    public function getPasswordEncoder(): UserPasswordEncoderInterface
-    {
-        return $this->passwordEncoder;
-    }
-
     public function getReferenceCode(): string
     {
         return 'user';
@@ -46,7 +35,7 @@ class UserFixtures extends AbstractFixture
     {
         $user = new User($datum['email']);
 
-        $user->setPassword($this->getPasswordEncoder()->encodePassword($user, $datum['password']));
+        $user->setPassword($this->passwordHasher->hashPassword($user, $datum['password']));
 
         return $user;
     }

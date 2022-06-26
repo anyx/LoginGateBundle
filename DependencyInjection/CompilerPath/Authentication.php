@@ -18,35 +18,5 @@ class Authentication implements CompilerPassInterface
         }
 
         $compositeStorageDefinition->setArguments([$chosenStorages]);
-
-        $this->initAuthListeners($container);
-    }
-
-    protected function initAuthListeners(ContainerBuilder $container)
-    {
-        foreach ($this->getListenersDefinitions() as $baseListener => $bundleListener) {
-            $container->getDefinition($baseListener)
-                ->setClass($container->getParameter($bundleListener))
-                ->addMethodCall(
-                    'setBruteForceChecker',
-                    [
-                        new Reference('anyx.login_gate.brute_force_checker'),
-                    ]
-                )
-                ->addMethodCall(
-                    'setDispatcher',
-                    [
-                        new Reference('event_dispatcher'),
-                    ]
-                );
-        }
-    }
-
-    protected function getListenersDefinitions(): array
-    {
-        return [
-            'security.authentication.listener.form' => 'anyx.login_gate.authentication.listener.form.class',
-            'security.authentication.listener.json' => 'anyx.login_gate.authentication.listener.json.class',
-        ];
     }
 }

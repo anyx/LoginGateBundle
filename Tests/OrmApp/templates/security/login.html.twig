@@ -24,6 +24,7 @@
         <input type="hidden" name="_csrf_token"
                value="{{ csrf_token('authenticate') }}"
         >
+        <input type="hidden" name="_target_path" value="/web"/>
         <button class="btn btn-lg btn-primary" type="submit">
             Sign in
         </button>

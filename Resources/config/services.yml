@@ -13,9 +13,15 @@ services:
         class: Anyx\LoginGateBundle\Storage\CompositeStorage
     anyx.login_gate.brute_force_checker:
         class: Anyx\LoginGateBundle\Service\BruteForceChecker
-        arguments: ['@anyx.login_gate.attempt_storage', '@anyx.login_gate.username_resolver', '%anyx.login_gate.brute_force_checker_options%']
-    anyx.login_gate.authentication_handler:
-        class: Anyx\LoginGateBundle\Security\AuthenticationHandler
-        arguments: ['@request_stack', '@anyx.login_gate.attempt_storage']
+        arguments: [ '@anyx.login_gate.attempt_storage', '@anyx.login_gate.username_resolver', '%anyx.login_gate.brute_force_checker_options%' ]
+    anyx.login_gate.security_subscriber:
+        class: Anyx\LoginGateBundle\EventSubscriber\SecuritySubscriber
+        arguments: [ '@request_stack',  '@anyx.login_gate.attempt_storage', '@anyx.login_gate.brute_force_checker', '@event_dispatcher' ]
         tags:
             - { name: kernel.event_subscriber }
+
+#    anyx.login_gate.authentication_handler:
+#        class: Anyx\LoginGateBundle\Security\AuthenticationHandler
+#        arguments: ['@request_stack', '@anyx.login_gate.attempt_storage']
+#        tags:
+#            - { name: kernel.event_subscriber }

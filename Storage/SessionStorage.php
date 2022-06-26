@@ -7,9 +7,9 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class SessionStorage implements StorageInterface
 {
-    const COUNT_LOGIN_ATTEMPTS = '_security.count_login_attempts';
+    public const COUNT_LOGIN_ATTEMPTS = '_security.count_login_attempts';
 
-    const DATE_LAST_LOGIN_ATTEMPT = '_security.last_failurelogin_attempt';
+    public const DATE_LAST_LOGIN_ATTEMPT = '_security.last_failurelogin_attempt';
 
     public function clearCountAttempts(Request $request, ?string $username): void
     {

@@ -12,6 +12,11 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: true
+
+    _instanceof:
+        Doctrine\Bundle\FixturesBundle\Fixture:
+            tags: [ 'doctrine.fixture.odm.mongodb' ]
 
     Anyx\LoginGateBundle\Service\BruteForceChecker: "@anyx.login_gate.brute_force_checker"
 
@@ -33,5 +38,6 @@ services:
             - { name: kernel.event_listener, event: security.brute_force_attempt, method: onBruteForceAttempt }
 
     doctrine: "@doctrine_mongodb"
+    Doctrine\Persistence\ManagerRegistry: "@doctrine_mongodb"
 
     MongoApp\Service\UsernameResolver: ~

@@ -12,7 +12,7 @@ class OrmAppTest extends AbstractLoginGateTestCase
 {
     protected static $initialized = false;
 
-    protected static function getKernelClass()
+    protected static function getKernelClass(): string
     {
         return \OrmApp\Kernel::class;
     }

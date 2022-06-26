@@ -10,7 +10,7 @@ interface FailureLoginAttemptRepositoryInterface
     public function getCountAttempts(string $ip, ?string $username, \DateTime $startDate);
 
     /**
-     * @return FailureLoginAttempt | null
+     * @return FailureLoginAttempt|null
      */
     public function getLastAttempt(string $ip, ?string $username): ?FailureLoginAttempt;
 

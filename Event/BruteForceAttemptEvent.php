@@ -3,36 +3,21 @@
 namespace Anyx\LoginGateBundle\Event;
 
 use Anyx\LoginGateBundle\Service\BruteForceChecker;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class BruteForceAttemptEvent extends Event
 {
-    /**
-     * @var RequestEvent
-     */
-    private $requestEvent;
-
-    /**
-     * @var \Anyx\LoginGateBundle\Service\BruteForceChecker
-     */
-    private $bruteForceChecker;
-
-    public function __construct(RequestEvent $requestEvent, BruteForceChecker $bruteForceChecker)
+    public function __construct(private Request $request, private BruteForceChecker $bruteForceChecker)
     {
-        $this->requestEvent = $requestEvent;
-        $this->bruteForceChecker = $bruteForceChecker;
     }
 
-    public function getRequestEvent(): RequestEvent
+    public function getRequest(): Request
     {
-        return $this->requestEvent;
+        return $this->request;
     }
 
-    /**
-     * @return \Anyx\LoginGateBundle\Service\BruteForceChecker
-     */
-    public function getBruteForceChecker()
+    public function getBruteForceChecker(): BruteForceChecker
     {
         return $this->bruteForceChecker;
     }

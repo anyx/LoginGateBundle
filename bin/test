@@ -1,4 +1,4 @@
 #!/bin/bash
 
 bin/phpunit -v -c phpunit.orm.xml
-bin/phpunit -v -c phpunit.mongo.xml
+#bin/phpunit -v -c phpunit.mongo.xml

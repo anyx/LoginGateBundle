@@ -2,14 +2,17 @@
 
 <!-- http://phpunit.de/manual/4.3/en/appendixes.configuration.html -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" backupGlobals="false" colors="true"
-         >
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd" colors="true">
     <php>
         <ini name="error_reporting" value="-1"/>
         <server name="APP_ENV" value="test" force="true"/>
         <server name="SHELL_VERBOSITY" value="-1"/>
         <server name="KERNEL_CLASS" value="Tests\OrmApp\src\Kernel" />
     </php>
+
+    <extensions>
+        <extension class="Zenstruck\Browser\Test\BrowserExtension" />
+    </extensions>
 
     <testsuites>
         <testsuite name="Orm App Test Suite">

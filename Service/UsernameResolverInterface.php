@@ -6,8 +6,5 @@ use Symfony\Component\HttpFoundation\Request;
 
 interface UsernameResolverInterface
 {
-    /**
-     * @return string|null
-     */
-    public function resolve(Request $request);
+    public function resolve(Request $request): ?string;
 }

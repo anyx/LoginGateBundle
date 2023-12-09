@@ -19,7 +19,7 @@ class FailureLoginAttemptRepository extends BaseRepository implements FailureLog
             ->execute();
     }
 
-    public function getLastAttempt(string $ip, ?string $username): ?Model\FailureLoginAttempt
+    public function getLastAttempt(string $ip, ?string $username): ?Model\FailureLoginAttemptInterface
     {
         return $this->createQueryBuilder()
             ->field('ip')->equals($ip)
@@ -29,9 +29,6 @@ class FailureLoginAttemptRepository extends BaseRepository implements FailureLog
             ->getSingleResult();
     }
 
-    /**
-     * @return int
-     */
     public function clearAttempts(string $ip, ?string $username): void
     {
         $this->createQueryBuilder()

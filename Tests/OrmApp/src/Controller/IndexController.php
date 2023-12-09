@@ -8,9 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class IndexController extends AbstractController
 {
-    /**
-     * @Route("/", name="home", methods={"GET"})
-     */
+    #[Route('/', name: 'home', methods: ['GET'])]
     public function index()
     {
         $user = $this->getUser();
@@ -21,9 +19,7 @@ class IndexController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/web", name="web_home", methods={"GET"})
-     */
+    #[Route('/web', name: 'web_home', methods: ['GET'])]
     public function webIndex()
     {
         $user = $this->getUser();

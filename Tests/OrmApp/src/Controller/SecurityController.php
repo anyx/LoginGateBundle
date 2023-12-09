@@ -12,9 +12,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    /**
-     * @Route("/api/login", name="api_login", methods={"POST"})
-     */
+    #[Route('/api/login', name: 'api_login', methods: ['POST'])]
     public function apiLogin(Request $request)
     {
         $user = $this->getUser();
@@ -28,9 +26,7 @@ class SecurityController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/web/login", name="web_login")
-     */
+    #[Route('/web/login', name: 'web_login', methods: ['GET', 'POST'])]
     public function formLogin(AuthenticationUtils $authenticationUtils, BruteForceChecker $bruteForceChecker, Request $request): Response
     {
         if (!$bruteForceChecker->canLogin($request)) {

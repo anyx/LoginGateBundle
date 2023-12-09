@@ -30,7 +30,7 @@ class FailureLoginAttemptRepository extends Repository implements FailureLoginAt
             ->getSingleScalarResult();
     }
 
-    public function getLastAttempt(string $ip, ?string $username): ?Model\FailureLoginAttempt
+    public function getLastAttempt(string $ip, ?string $username): ?Model\FailureLoginAttemptInterface
     {
         $queryBuilder = $this->createQueryBuilder('attempt')
             ->where('attempt.ip = :ip')

@@ -2,14 +2,17 @@
 
 namespace Anyx\LoginGateBundle\Document;
 
-use Anyx\LoginGateBundle\Model\FailureLoginAttempt as BaseFailureLoginAttempt;
+use Anyx\LoginGateBundle\Model\FailureLoginAttemptInterface;
+use Anyx\LoginGateBundle\Model\FailureLoginAttemptTrait;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
  * @MongoDB\Document(repositoryClass="Anyx\LoginGateBundle\Document\FailureLoginAttemptRepository")
  */
-class FailureLoginAttempt extends BaseFailureLoginAttempt
+class FailureLoginAttempt implements FailureLoginAttemptInterface
 {
+    use FailureLoginAttemptTrait;
+
     /**
      * @MongoDB\Id()
      *

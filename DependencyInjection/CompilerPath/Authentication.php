@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class Authentication implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $compositeStorageDefinition = $container->getDefinition('anyx.login_gate.attempt_storage');
         $chosenStorages = [];

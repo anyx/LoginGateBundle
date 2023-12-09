@@ -42,14 +42,4 @@ class OrmAppTest extends AbstractLoginGateTestCase
         $executor->execute($fixtures);
         self::$referenceRepository = $executor->getReferenceRepository();
     }
-
-    private function createDatabase(EntityManager $manager)
-    {
-        $schemaTool = new SchemaTool($manager);
-        $metadata = $manager->getMetadataFactory()->getAllMetadata();
-
-        // Drop and recreate tables for all entities
-        $schemaTool->dropSchema($metadata);
-        $schemaTool->createSchema($metadata);
-    }
 }

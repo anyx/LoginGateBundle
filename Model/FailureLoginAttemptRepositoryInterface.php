@@ -4,18 +4,9 @@ namespace Anyx\LoginGateBundle\Model;
 
 interface FailureLoginAttemptRepositoryInterface
 {
-    /**
-     * @return int
-     */
-    public function getCountAttempts(string $ip, ?string $username, \DateTime $startDate);
+    public function getCountAttempts(string $ip, ?string $username, \DateTime $startDate): int;
 
-    /**
-     * @return FailureLoginAttempt|null
-     */
-    public function getLastAttempt(string $ip, ?string $username): ?FailureLoginAttempt;
+    public function getLastAttempt(string $ip, ?string $username): ?FailureLoginAttemptInterface;
 
-    /**
-     * @return int
-     */
     public function clearAttempts(string $ip, ?string $username): void;
 }

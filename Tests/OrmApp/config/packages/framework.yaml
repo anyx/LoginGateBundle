@@ -11,13 +11,11 @@ framework:
         handler_id: null
         cookie_secure: auto
         cookie_samesite: lax
-        storage_factory_id: session.storage.factory.native
 
     #esi: true
     #fragments: true
     php_errors:
         log: true
-    annotations: ~
 
 when@test:
     framework:

@@ -29,6 +29,9 @@ security:
             provider: app_user_provider
             json_login:
                 check_path: /api/login
+        main:
+            logout:
+                path: app_logout
 
     access_control:
         - { path: ^/, roles: PUBLIC_ACCESS }

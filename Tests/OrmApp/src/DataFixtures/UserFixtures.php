@@ -36,6 +36,7 @@ class UserFixtures extends AbstractFixture
         $user = new User($datum['email']);
 
         $user->setPassword($this->passwordHasher->hashPassword($user, $datum['password']));
+        $user->setRoles(['ROLE_USER']);
 
         return $user;
     }

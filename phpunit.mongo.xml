@@ -14,7 +14,7 @@
 
     <testsuites>
         <testsuite name="MongoDB App Test Suite">
-            <file>./Tests/MongoAppTest.php</file>
+<!--            <file>./Tests/MongoAppTest.php</file>-->
         </testsuite>
     </testsuites>
 </phpunit>

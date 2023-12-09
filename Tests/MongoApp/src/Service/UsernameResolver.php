@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class UsernameResolver implements UsernameResolverInterface
 {
-    public function resolve(Request $request)
+    public function resolve(Request $request): ?string
     {
         $requestData = json_decode($request->getContent(), true);
 

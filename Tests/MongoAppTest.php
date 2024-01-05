@@ -28,4 +28,9 @@ class MongoAppTest extends AbstractLoginGateTestCase
         $executor->execute($fixtures);
         self::$referenceRepository = $executor->getReferenceRepository();
     }
+
+    protected function getUserClassName(): string
+    {
+        return \MongoApp\Document\User::class;
+    }
 }

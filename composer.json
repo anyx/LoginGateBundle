@@ -45,7 +45,8 @@
     "symfony/phpunit-bridge": "^6.1",
     "zenstruck/browser": "^1.6",
     "symfony/runtime": "^7.0",
-    "mtdowling/jmespath.php": "^2.7"
+    "mtdowling/jmespath.php": "^2.7",
+    "doctrine/mongodb-odm-bundle": "5.0.x-dev"
   },
   "autoload": {
     "psr-4": {

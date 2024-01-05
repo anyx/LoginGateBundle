@@ -42,4 +42,9 @@ class OrmAppTest extends AbstractLoginGateTestCase
         $executor->execute($fixtures);
         self::$referenceRepository = $executor->getReferenceRepository();
     }
+
+    protected function getUserClassName(): string
+    {
+        return \OrmApp\Entity\User::class;
+    }
 }

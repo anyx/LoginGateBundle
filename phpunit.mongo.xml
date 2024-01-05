@@ -2,7 +2,7 @@
 
 <!-- http://phpunit.de/manual/4.3/en/appendixes.configuration.html -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
          backupGlobals="false"
          colors="true"
 >
@@ -14,7 +14,7 @@
 
     <testsuites>
         <testsuite name="MongoDB App Test Suite">
-<!--            <file>./Tests/MongoAppTest.php</file>-->
+            <file>./Tests/MongoAppTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

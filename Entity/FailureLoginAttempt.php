@@ -15,7 +15,7 @@ class FailureLoginAttempt implements FailureLoginAttemptInterface
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     #[ORM\Column(type: 'integer')]
-    protected ?string $id;
+    protected ?int $id;
 
     #[ORM\Column(type: 'string', length: 45)]
     protected ?string $ip;

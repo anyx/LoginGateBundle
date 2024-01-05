@@ -4,10 +4,9 @@ namespace MongoApp\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-abstract class AbstractFixture extends Fixture implements ContainerAwareInterface
+abstract class AbstractFixture extends Fixture
 {
     /**
      * @var ContainerInterface

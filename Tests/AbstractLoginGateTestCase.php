@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Zenstruck\Browser\KernelBrowser;
 use Zenstruck\Browser\Test\HasBrowser;
 
@@ -17,6 +18,8 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
     use HasBrowser;
 
     abstract protected function loadFixtures(KernelInterface $kernel);
+
+    abstract protected function getUserClassName(): string;
 
     /**
      * @var \Doctrine\Common\DataFixtures\ReferenceRepository
@@ -31,7 +34,7 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
 
     public function testCorrectJsonLogin()
     {
-        $peter = $this->getReference('user.peter');
+        $peter = $this->getUser('user.peter');
 
         $response = $this->attemptJsonLogin($peter->getEmail(), 'password');
 
@@ -40,14 +43,14 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
 
     public function testCorrectFormLogin()
     {
-        $peter = $this->getReference('user.peter');
+        $peter = $this->getUser('user.peter');
 
         $this->attemptFormLogin($peter->getEmail(), 'password')->assertSuccessful();
     }
 
     public function testCatchBruteForceAttemptInJson()
     {
-        $peter = $this->getReference('user.peter');
+        $peter = $this->getUser('user.peter');
 
         for ($i = 0; $i < 3; ++$i) {
             $this
@@ -62,7 +65,7 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
 
     public function testCatchBruteForceAttemptInForm()
     {
-        $peter = $this->getReference('user.peter');
+        $peter = $this->getUser('user.peter');
 
         for ($i = 0; $i < 2; ++$i) {
             $this
@@ -82,7 +85,7 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
 
         $request = $this->browser()->visit('web')->client()->getRequest();
 
-        $peter = $this->getReference('user.peter');
+        $peter = $this->getUser('user.peter');
         $this->assertEquals(0, $bruteForceChecker->getStorage()->getCountAttempts($request, $peter->getUsername()));
 
         $this->attemptJsonLogin($peter->getEmail(), 'wrong password', 401);
@@ -94,8 +97,8 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
 
     public function testCheckUsernamesFromSameIpAddress()
     {
-        $peter = $this->getReference('user.peter');
-        $helen = $this->getReference('user.helen');
+        $peter = $this->getUser('user.peter');
+        $helen = $this->getUser('user.helen');
 
         $this->browser()->visit('web');
 
@@ -133,9 +136,9 @@ abstract class AbstractLoginGateTestCase extends KernelTestCase
             ->click('Sign in');
     }
 
-    protected function getReference(string $name)
+    protected function getUser(string $name): UserInterface
     {
-        return $this->getReferenceRepository()->getReference($name);
+        return $this->getReferenceRepository()->getReference($name, $this->getUserClassName());
     }
 
     protected function getReferenceRepository(): ReferenceRepository

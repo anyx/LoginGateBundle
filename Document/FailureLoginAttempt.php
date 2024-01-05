@@ -6,45 +6,23 @@ use Anyx\LoginGateBundle\Model\FailureLoginAttemptInterface;
 use Anyx\LoginGateBundle\Model\FailureLoginAttemptTrait;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
-/**
- * @MongoDB\Document(repositoryClass="Anyx\LoginGateBundle\Document\FailureLoginAttemptRepository")
- */
+#[MongoDB\Document(repositoryClass: FailureLoginAttemptRepository::class)]
 class FailureLoginAttempt implements FailureLoginAttemptInterface
 {
     use FailureLoginAttemptTrait;
 
-    /**
-     * @MongoDB\Id()
-     *
-     * @var string
-     */
-    protected $id;
+    #[MongoDB\Id]
+    protected ?string $id;
 
-    /**
-     * @MongoDB\Field(type="string")
-     *
-     * @var string
-     */
-    protected $ip;
+    #[MongoDB\Field(type: "string")]
+    protected ?string $ip;
 
-    /**
-     * @MongoDB\Field(type="date")
-     *
-     * @var \DateTime
-     */
-    protected $createdAt;
+    #[MongoDB\Field(type: "date")]
+    protected ?\DateTimeInterface $createdAt;
 
-    /**
-     * @MongoDB\Field(type="hash")
-     *
-     * @var array
-     */
-    protected $data;
+    #[MongoDB\Field(type: "hash")]
+    protected ?array $data = [];
 
-    /**
-     * @MongoDB\Field(type="string")
-     *
-     * @var string
-     */
-    protected $username;
+    #[MongoDB\Field(type: "string")]
+    protected ?string $username;
 }

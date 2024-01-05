@@ -1,3 +1,9 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+controllers:
+  resource:
+    path: ../src/Controller/
+    namespace: MongoApp\Controller
+  type: attribute
+
+app_logout:
+  path: /web/logout
+  methods: GET

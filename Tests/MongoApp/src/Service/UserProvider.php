@@ -44,13 +44,13 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
         // TODO: Implement upgradePassword() method.
     }
 
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): UserInterface
     {
         return $this->getDocumentManager()->getRepository($this->getRepositoryName())
             ->findOneBy(['email' => $user->getUsername()]);
     }
 
-    public function supportsClass($class)
+    public function supportsClass($class): bool
     {
         $supportedClass = User::class;
 
@@ -67,6 +67,6 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 
     protected function getRepositoryName(): string
     {
-        return 'Document:User';
+        return User::class;
     }
 }

@@ -6,38 +6,20 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @MongoDB\Document()
- */
+#[MongoDB\Document]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    /**
-     * @MongoDB\Id
-     *
-     * @var string
-     */
-    private $id;
+    #[MongoDB\Id]
+    private ?string $id;
 
-    /**
-     * @MongoDB\Field(type="string")
-     *
-     * @var string
-     */
-    private $email;
+    #[MongoDB\Field(type: "string")]
+    private ?string $email;
 
-    /**
-     * @MongoDB\Field(type="collection")
-     *
-     * @var array
-     */
-    private $roles = [];
+    #[MongoDB\Field(type: "collection")]
+    private array $roles = [];
 
-    /**
-     * @MongoDB\Field(type="string")
-     *
-     * @var string
-     */
-    private $password = '';
+    #[MongoDB\Field(type: "string")]
+    private string $password = '';
 
     public function __construct(string $email)
     {
@@ -121,7 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;

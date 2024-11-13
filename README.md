@@ -1,6 +1,8 @@
 LoginGateBundle
 ==============
 
+## :warning: Bundle is deprecated since similar functionality was introduced in Symfony framework. See https://symfony.com/doc/current/security.html#limiting-login-attempts
+
 [![Build Status](https://travis-ci.org/anyx/LoginGateBundle.svg?branch=master)](https://travis-ci.org/anyx/LoginGateBundle)
 [![Latest Stable Version](https://poser.pugx.org/anyx/login-gate-bundle/v/stable)](https://packagist.org/packages/anyx/login-gate-bundle)
 [![Total Downloads](https://poser.pugx.org/anyx/login-gate-bundle/downloads)](https://packagist.org/packages/anyx/login-gate-bundle)

@@ -14,10 +14,8 @@ class FailureLoginAttemptRepository extends Repository implements FailureLoginAt
             ->select('COUNT(attempt.id)')
             ->where('attempt.ip = :ip')
             ->andWhere('attempt.createdAt > :createdAt')
-            ->setParameters([
-                'ip' => $ip,
-                'createdAt' => $startDate,
-            ]);
+            ->setParameter('ip', $ip)
+            ->setParameter('createdAt', $startDate);
 
         if (!$username) {
             $queryBuilder->andWhere('attempt.username IS NULL');
@@ -35,9 +33,7 @@ class FailureLoginAttemptRepository extends Repository implements FailureLoginAt
         $queryBuilder = $this->createQueryBuilder('attempt')
             ->where('attempt.ip = :ip')
             ->orderBy('attempt.createdAt', 'DESC')
-            ->setParameters([
-                'ip' => $ip,
-            ]);
+            ->setParameter('ip', $ip);
 
         if (!$username) {
             $queryBuilder->andWhere('attempt.username IS NULL');

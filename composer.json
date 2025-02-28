@@ -38,7 +38,7 @@
     "escapestudios/symfony2-coding-standard": "3.x-dev",
     "friendsofphp/php-cs-fixer": "^3.5",
     "phpmd/phpmd": "@stable",
-    "doctrine/orm": "^2.17",
+    "doctrine/orm": "^2.17|^3.0",
     "symfony/twig-bundle":"^7.0",
     "twig/extra-bundle": "^2.12|^3.0",
     "twig/twig": "^2.12|^3.0",
